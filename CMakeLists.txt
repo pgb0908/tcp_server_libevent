@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.23)
+project(libevent_test1)
+
+INCLUDE(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(libevent_test1 main.cpp)
