@@ -4,10 +4,7 @@ project(libevent_test1)
 INCLUDE(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-set(CMAKE_CXX_STANDARD 11)
-
-set(EVENT__DISABLE_SAMPLES 0)
-set(EVENT__DISABLE_TESTS 0)
+set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(3rd/libevent)
 

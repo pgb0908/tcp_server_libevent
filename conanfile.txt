@@ -1,5 +1,6 @@
 [requires]
 openssl/3.0.7
+mbedtls/3.2.1
 
 [options]
 
