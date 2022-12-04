@@ -6,3 +6,11 @@ conan install .. -pr=default
 if [ "$?" != "0" ]; then
     exit -1
 fi
+
+git submodule init
+git submodule update
+
+
+cmake .
+
+make .
