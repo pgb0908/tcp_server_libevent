@@ -67,6 +67,8 @@ listener_cb(struct evconnlistener *listener, evutil_socket_t fd,
         event_base_loopbreak(base);
         return;
     }
+
+    // 버퍼에 대한 이벤트 발생
     bufferevent_setcb(bev, NULL, conn_writecb, conn_eventcb, NULL);
     bufferevent_enable(bev, EV_WRITE);
     bufferevent_disable(bev, EV_READ);
