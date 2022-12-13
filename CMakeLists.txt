@@ -7,8 +7,8 @@ conan_basic_setup()
 set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(3rd/libevent)
+add_subdirectory(example)
 
-add_executable(libevent_test1 main.cpp)
-target_link_libraries(libevent_test1 PUBLIC event)
+
 
 
