@@ -30,7 +30,7 @@ void Server::addListenerToWorker(Worker &worker, ListenerImpl &listener) {
                 // The add listener completion runs on the worker thread. Post back to the main thread to
                 // avoid locking.
                 server_.dispatcher().post([this, completion_callback]() -> void {
-                    stats_.listener_create_success_.inc();
+                    // stats_.listener_create_success_.inc();
                     if (completion_callback) {
                         completion_callback();
                     }
