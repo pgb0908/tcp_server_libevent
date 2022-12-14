@@ -1,3 +1,3 @@
 
-add_executable(libevent_test1 main.cpp ../source/DispatcherImpl.cpp ../source/DispatcherImpl.h ../source/Dispatcher.h ../source/FileEvent.h ../source/Timer.h ../source/ScopeTrackedObject.h ../source/TimeSource.h ../source/SchedulableCallback.h ../source/ScaledTimer.h ../source/IntervalValue.h ../source/Connection.h ../source/StreamInfo.h ../source/DispatcherThreadDeletable.h ../source/Signal.h ../source/DeferredDeletable.h ../source/Socket.h ../source/Address.h)
-target_link_libraries(libevent_test1 PUBLIC event)
+add_executable(libevent_test1 main.cpp)
+target_link_libraries(libevent_test1 PUBLIC envoy)
