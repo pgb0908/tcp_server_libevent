@@ -64,8 +64,7 @@ enum class ConnectionCloseType {
 /**
  * An abstract raw connection. Free the connection or call close() to disconnect.
  */
-class Connection : public DeferredDeletable,
-                   public FilterManager{
+class Connection{
 public:
     enum class State { Open, Closing, Closed };
 
@@ -79,7 +78,7 @@ public:
     using BytesSentCb = std::function<bool(uint64_t bytes_sent)>;
 
 
-    ~Connection() override = default;
+    ~Connection()  = default;
 
     /**
      * Register callbacks that fire when connection events occur.
@@ -198,20 +197,13 @@ public:
      * @return The unix socket peer credentials of the remote client. Note that this is only
      * supported for unix socket connections.
      */
-    virtual absl::optional<UnixDomainSocketPeerCredentials> unixSocketPeerCredentials() const = 0;
-
-    /**
-     * Set the stats to update for various connection state changes. Note that for performance reasons
-     * these stats are eventually consistent and may not always accurately represent the connection
-     * state at any given point in time.
-     */
-    virtual void setConnectionStats(const ConnectionStats& stats) = 0;
+    virtual std::optional<UnixDomainSocketPeerCredentials> unixSocketPeerCredentials() const = 0;
 
     /**
      * @return the const SSL connection data if this is an SSL connection, or nullptr if it is not.
      */
     // TODO(snowp): Remove this in favor of StreamInfo::downstreamSslConnection.
-    virtual Ssl::ConnectionInfoConstSharedPtr ssl() const = 0;
+    //virtual Ssl::ConnectionInfoConstSharedPtr ssl() const = 0;
 
     /**
      * @return requested server name (e.g. SNI in TLS), if any.
@@ -237,7 +229,7 @@ public:
      *        end_stream is true, the connection is half-closed. This may only be set to true if
      *        enableHalfClose(true) has been set on this connection.
      */
-    virtual void write(Instance& data, bool end_stream) = 0;
+    //virtual void write(Instance& data, bool end_stream) = 0;
 
     /**
      * Set a soft limit on the size of buffers for the connection.
@@ -264,7 +256,7 @@ public:
     /**
      * Get the socket options set on this connection.
      */
-    virtual const OptionsSharedPtr& socketOptions() const = 0;
+    //virtual const OptionsSharedPtr& socketOptions() const = 0;
 
     /**
      * The StreamInfo object associated with this connection. This is typically
@@ -275,8 +267,8 @@ public:
      *
      * @return StreamInfo object associated with this connection.
      */
-    virtual StreamInfo& streamInfo() = 0;
-    virtual const StreamInfo::StreamInfo& streamInfo() const = 0;
+    //virtual StreamInfo& streamInfo() = 0;
+    //virtual const StreamInfo::StreamInfo& streamInfo() const = 0;
 
     /**
      * Set the timeout for delayed connection close()s.
@@ -346,11 +338,6 @@ public:
      */
     virtual void setTransportSocketConnectTimeout(std::chrono::milliseconds timeout) = 0;
 };
-
-void
-ServerConnection::setTransportSocketConnectTimeout(std::chrono::milliseconds timeout) {
-
-}
 
 using ServerConnectionPtr = std::unique_ptr<ServerConnection>;
 

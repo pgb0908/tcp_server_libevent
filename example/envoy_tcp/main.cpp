@@ -3,9 +3,11 @@
 //
 
 #include <iostream>
+#include "../../source/Server.h"
 
 int main() {
+    Server server;
+    server.run();
 
-    std::cout << "hello" << std::endl;
     return 0;
 }

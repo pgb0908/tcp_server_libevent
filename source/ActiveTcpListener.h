@@ -1,0 +1,14 @@
+//
+// Created by bong on 22. 12. 14.
+//
+
+#ifndef LIBEVENT_TEST1_ACTIVETCPLISTENER_H
+#define LIBEVENT_TEST1_ACTIVETCPLISTENER_H
+
+
+class ActiveTcpListener {
+
+};
+
+
+#endif //LIBEVENT_TEST1_ACTIVETCPLISTENER_H

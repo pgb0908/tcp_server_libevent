@@ -10,6 +10,25 @@
 #include <vector>
 #include "Address.h"
 
+
+/**
+ * SysCallResult holds the rc and errno values resulting from a system call.
+ */
+template <typename T> struct SysCallResult {
+
+    /**
+     * The return code from the system call.
+     */
+    T return_value_;
+
+    /**
+     * The errno value as captured after the system call.
+     */
+    int errno_;
+};
+
+using SysCallIntResult = SysCallResult<int>;
+
 // SocketOptionName is an optional value that captures the setsockopt(2)
 // arguments. The idea here is that if a socket option is not supported
 // on a platform, we can make this the empty value, which allows us to
@@ -188,12 +207,12 @@ public:
     /**
      * @return IoHandle for the underlying connection
      */
-    virtual IoHandle& ioHandle() = 0 ;
+    //virtual IoHandle& ioHandle() = 0 ;
 
     /**
      * @return const IoHandle for the underlying connection
      */
-    virtual const IoHandle& ioHandle() const = 0 ;
+    //virtual const IoHandle& ioHandle() const = 0 ;
 
     /**
      * Used to duplicate the underlying file descriptor of the socket.

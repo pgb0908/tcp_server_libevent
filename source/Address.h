@@ -9,10 +9,10 @@
 #include <cstdint>
 #include <memory>
 #include <string>
-#include <bits/socket.h>
+#include <arpa/inet.h>
 
-class Instance;
-using InstanceConstSharedPtr = std::shared_ptr<const Instance>;
+class NetAddrInstance;
+using InstanceConstSharedPtr = std::shared_ptr<const NetAddrInstance>;
 
 /**
  * Interface for an Ipv4 address.
@@ -145,12 +145,12 @@ enum class Type { Ip, Pipe, EnvoyInternal };
 /**
  * Interface for all network addresses.
  */
-class Instance {
+class NetAddrInstance {
 public:
-    virtual ~Instance() = default;
+    virtual ~NetAddrInstance() = default;
 
-    virtual bool operator==(const Instance& rhs) const = 0 ;
-    bool operator!=(const Instance& rhs) const { return !operator==(rhs); }
+    virtual bool operator==(const NetAddrInstance& rhs) const = 0 ;
+    bool operator!=(const NetAddrInstance& rhs) const { return !operator==(rhs); }
 
     /**
      * @return a human readable string for the address that represents the

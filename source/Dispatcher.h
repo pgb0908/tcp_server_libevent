@@ -38,6 +38,7 @@ public:
      * current thread of execution is on the same thread upon which the dispatcher loop is running.
      */
     virtual bool isThreadSafe() const = 0;
+
 };
 
 /**
@@ -94,7 +95,7 @@ public:
     /**
      * Returns a time-source to use with this dispatcher.
      */
-    virtual TimeSource& timeSource() = 0;
+    //virtual TimeSource& timeSource() = 0;
 
     /**
      * Returns a recently cached MonotonicTime value.
@@ -104,7 +105,7 @@ public:
     /**
      * Clears any items in the deferred deletion queue.
      */
-    virtual void clearDeferredDeleteList() = 0;
+    //virtual void clearDeferredDeleteList() = 0;
 
     /**
      * Wraps an already-accepted socket in an instance of Envoy's server Network::Connection.
@@ -114,10 +115,10 @@ public:
      * @param stream_info info object for the server connection
      * @return Network::ConnectionPtr a server connection that is owned by the caller.
      */
-    virtual ServerConnectionPtr
+/*    virtual ServerConnectionPtr
     createServerConnection(ConnectionSocketPtr&& socket,
                            TransportSocketPtr&& transport_socket,
-                           StreamInfo& stream_info) = 0;
+                           StreamInfo& stream_info) = 0;*/
 
     /**
      * Creates an instance of Envoy's Network::ClientConnection. Does NOT initiate the connection;
@@ -148,9 +149,9 @@ public:
      * connection limit.
      * @return Network::ListenerPtr a new listener that is owned by the caller.
      */
-    virtual ListenerPtr createListener(SocketSharedPtr&& socket,
+/*    virtual ListenerPtr createListener(SocketSharedPtr&& socket,
                                                 TcpListenerCallbacks& cb, bool bind_to_port,
-                                                bool ignore_global_conn_limit) = 0;
+                                                bool ignore_global_conn_limit) = 0;*/
     /**
       * Creates a logical udp listener on a specific port.
       * @param socket supplies the socket to listen on.

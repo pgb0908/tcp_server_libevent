@@ -9,7 +9,6 @@
 #include <chrono>
 #include <memory>
 #include "ScopeTrackedObject.h"
-#include "Dispatcher.h"
 #include "TimeSource.h"
 #include "SchedulableCallback.h"
 
@@ -17,6 +16,8 @@
  * Callback invoked when a timer event fires.
  */
 using TimerCb = std::function<void()>;
+
+class Dispatcher;
 
 class Timer {
 public:
@@ -61,6 +62,7 @@ public:
      * Creates a timer.
      */
     virtual TimerPtr createTimer(const TimerCb& cb, Dispatcher& dispatcher) = 0;
+
 };
 
 using SchedulerPtr = std::unique_ptr<Scheduler>;
