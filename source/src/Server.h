@@ -7,6 +7,16 @@
 
 #include "include/event/Dispatcher.h"
 
+class myTime : public Event::TimeSystem {
+public:
+    SystemTime systemTime() override;
+
+    MonotonicTime monotonicTime() override;
+
+    Event::SchedulerPtr
+    createScheduler(Event::Scheduler &base_scheduler, Event::CallbackScheduler &cb_scheduler) override;
+};
+
 class Server {
 public:
     Server();

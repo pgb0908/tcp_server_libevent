@@ -35,7 +35,7 @@ namespace Event {
      */
     class DispatcherImpl : public Dispatcher {
     public:
-        DispatcherImpl(const std::string &name, Api::Api &api, Event::TimeSystem &time_system);
+        DispatcherImpl(const std::string &name, Api::Api &api, TimeSystem &time_system);
 
 /*        DispatcherImpl(const std::string &name, Api::Api &api, Event::TimeSystem &time_systems,
                        const Buffer::WatermarkFactorySharedPtr &watermark_factory);*/

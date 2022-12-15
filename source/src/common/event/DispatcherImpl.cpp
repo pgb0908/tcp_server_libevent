@@ -11,6 +11,10 @@
 #include "FileEventImpl.h"
 
 namespace Event {
+    DispatcherImpl::DispatcherImpl(const std::string &name, Api::Api &api, TimeSystem &time_system)
+            : name_(name), time_source_(time_system), random_generator_(api.randomGenerator()),
+              thread_factory_(api.threadFactory()), current_to_delete_(&to_delete_1_){
+    }
 
 /*    DispatcherImpl::DispatcherImpl(const std::string& name, Api::Api& api,
                                    Event::TimeSystem& time_system)
@@ -401,5 +405,7 @@ namespace Event {
         tracked_object_stack_.pop_back();
         //ASSERT(top == expected_object, "Popped the top of the tracked object stack, but it wasn't the expected object!");
     }
+
+
 
 } // namespace Event

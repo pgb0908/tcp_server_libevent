@@ -3,6 +3,7 @@
 //
 
 #include "Server.h"
+#include "src/common/event/DispatcherImpl.h"
 
 void Server::run() {
 
@@ -37,8 +38,9 @@ void Server::shutdown() {
 }*/
 
 Server::Server(){
-/*    dispatcher_ = std::make_unique<DispatcherImpl>("dispahter1");
-    listener_ = std::make_unique<ListenerImpl>();
+    myTime time;
+    dispatcher_ = std::make_unique<Event::DispatcherImpl>("dispahter1", , time);
+/*    listener_ = std::make_unique<ListenerImpl>();
     workerFactory_ = std::make_unique<ProdWorkerFactory>();
 
     // worker에게 listener 할당
@@ -50,4 +52,16 @@ Server::Server(){
     for (const auto& worker : workers_) {
         addListenerToWorker(*worker, *listener_);
     }*/
+}
+
+SystemTime myTime::systemTime() {
+    return std::chrono::system_clock::now();
+}
+
+MonotonicTime myTime::monotonicTime() {
+    return std::chrono::steady_clock::now();
+}
+
+Event::SchedulerPtr myTime::createScheduler(Event::Scheduler &base_scheduler, Event::CallbackScheduler &cb_scheduler) {
+
 }
