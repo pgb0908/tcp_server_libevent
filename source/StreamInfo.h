@@ -1,8 +1,0 @@
-//
-// Created by bong on 22. 12. 13.
-//
-
-#ifndef LIBEVENT_TEST1_STREAMINFO_H
-#define LIBEVENT_TEST1_STREAMINFO_H
-
-#endif //LIBEVENT_TEST1_STREAMINFO_H

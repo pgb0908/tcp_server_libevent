@@ -2,6 +2,7 @@
 openssl/3.0.7
 mbedtls/3.2.1
 abseil/20220623.1
+fmt/9.1.0
 
 [options]
 

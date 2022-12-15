@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "../../source/Server.h"
+#include "../../source/src/Server.h"
 
 int main() {
     Server server;
