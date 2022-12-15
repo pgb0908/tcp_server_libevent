@@ -25,6 +25,7 @@ namespace Network {
     namespace Address {
 
         class Instance;
+
         using InstanceConstSharedPtr = std::shared_ptr<const Instance>;
 
 /**
@@ -69,7 +70,9 @@ namespace Network {
             virtual InstanceConstSharedPtr v4CompatibleAddress() const = 0;
         };
 
-        enum class IpVersion { v4, v6 }; // NOLINT(readability-identifier-naming)
+        enum class IpVersion {
+            v4, v6
+        }; // NOLINT(readability-identifier-naming)
 
 /**
  * Interface for a generic IP address.
@@ -81,7 +84,7 @@ namespace Network {
             /**
              * @return the address as a string. E.g., "1.2.3.4" for an IPv4 address.
              */
-            virtual const std::string& addressAsString() const = 0;
+            virtual const std::string &addressAsString() const = 0;
 
             /**
              * @return whether this address is wild card, i.e., '0.0.0.0'.
@@ -97,12 +100,12 @@ namespace Network {
             /**
              * @return Ipv4 address data IFF version() == IpVersion::v4, otherwise nullptr.
              */
-            virtual const Ipv4* ipv4() const = 0;
+            virtual const Ipv4 *ipv4() const = 0;
 
             /**
              * @return Ipv6 address data IFF version() == IpVersion::v6, otherwise nullptr.
              */
-            virtual const Ipv6* ipv6() const = 0;
+            virtual const Ipv6 *ipv6() const = 0;
 
             /**
              * @return the port associated with the address. Port may be zero if not specified, not
@@ -123,6 +126,7 @@ namespace Network {
         class Pipe {
         public:
             virtual ~Pipe() = default;
+
             /**
              * @return abstract namespace flag.
              */
@@ -145,15 +149,17 @@ namespace Network {
              * @return The unique id of the internal address. If the address represents the destination
              * internal listener, the address id is that listener name.
              */
-            virtual const std::string& addressId() const = 0;
+            virtual const std::string &addressId() const = 0;
 
             /**
              * @return The optional endpoint id of the internal address.
              */
-            virtual const std::string& endpointId() const = 0;
+            virtual const std::string &endpointId() const = 0;
         };
 
-        enum class Type { Ip, Pipe, EnvoyInternal };
+        enum class Type {
+            Ip, Pipe, EnvoyInternal
+        };
 
 /**
  * Interface for all network addresses.
@@ -162,8 +168,9 @@ namespace Network {
         public:
             virtual ~Instance() = default;
 
-            virtual bool operator==(const Instance& rhs) const = 0;
-            bool operator!=(const Instance& rhs) const { return !operator==(rhs); }
+            virtual bool operator==(const Instance &rhs) const = 0;
+
+            bool operator!=(const Instance &rhs) const { return !operator==(rhs); }
 
             /**
              * @return a human readable string for the address that represents the
@@ -175,7 +182,7 @@ namespace Network {
              * For IPv6 addresses: "[1234:5678::9]:443"
              * For pipe addresses: "/foo"
              */
-            virtual const std::string& asString() const = 0;
+            virtual const std::string &asString() const = 0;
 
             /**
              * @return Similar to asString but returns a string view.
@@ -189,29 +196,29 @@ namespace Network {
              * This string has a source-dependent format and should preserve the original
              * name for Address::Instances resolved by a Network::Address::Resolver.
              */
-            virtual const std::string& logicalName() const = 0;
+            virtual const std::string &logicalName() const = 0;
 
             /**
              * @return the IP address information IFF type() == Type::Ip, otherwise nullptr.
              */
-            virtual const Ip* ip() const = 0;
+            virtual const Ip *ip() const = 0;
 
             /**
              * @return the pipe address information IFF type() == Type::Pipe, otherwise nullptr.
              */
-            virtual const Pipe* pipe() const = 0;
+            virtual const Pipe *pipe() const = 0;
 
             /**
              * @return the envoy internal address information IFF type() ==
              * Type::EnvoyInternal, otherwise nullptr.
              */
-            virtual const EnvoyInternalAddress* envoyInternalAddress() const = 0;
+            virtual const EnvoyInternalAddress *envoyInternalAddress() const = 0;
 
             /**
              * @return the underlying structure wherein the address is stored. Return nullptr if the address
              * type is internal address.
              */
-            virtual const sockaddr* sockAddr() const = 0;
+            virtual const sockaddr *sockAddr() const = 0;
 
             /**
              * @return length of the address container.
@@ -232,7 +239,7 @@ namespace Network {
             /**
              * @return SocketInterface to be used with the address.
              */
-            virtual const Network::SocketInterface& socketInterface() const = 0;
+            virtual const Network::SocketInterface &socketInterface() const = 0;
         };
 
     } // namespace Address

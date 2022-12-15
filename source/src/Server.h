@@ -20,7 +20,7 @@ private:
     //void addListenerToWorker(Worker& worker, ListenerImpl& listener);
     Event::DispatcherPtr dispatcher_;
 
-    //std::unique_ptr<ListenerImpl> listener_;
+    // std::unique_ptr<ListenerImpl> listener_;
     //std::unique_ptr<ProdWorkerFactory> workerFactory_;
 
     //std::vector<WorkerPtr> workers_;
