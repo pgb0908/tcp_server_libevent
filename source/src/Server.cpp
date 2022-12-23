@@ -39,7 +39,7 @@ void Server::shutdown() {
 
 Server::Server(){
     myTime time;
-    dispatcher_ = std::make_unique<Event::DispatcherImpl>("dispahter1", , time);
+    //dispatcher_ = std::make_unique<Event::DispatcherImpl>("dispahter1", , time);
 /*    listener_ = std::make_unique<ListenerImpl>();
     workerFactory_ = std::make_unique<ProdWorkerFactory>();
 

@@ -9,6 +9,9 @@
 #include <cstring>
 #include <functional>
 #include <memory>
+#include <sys/syscall.h>
+#include <unistd.h>
+
 
 #include "NonCopyable.h"
 

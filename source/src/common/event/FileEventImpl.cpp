@@ -159,4 +159,8 @@ namespace Event {
         cb_(events);
     }
 
+    FileEventImpl::FileEventImpl(Dispatcher &dispatcher) : dispatcher_(dispatcher) {
+
+    }
+
 } // namespace Event

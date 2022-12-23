@@ -8,6 +8,7 @@
 #include "src/common/event/EventImplBase.h"
 
 #include "include/event/Signal.h"
+#include "src/common/event/DispatcherImpl.h"
 
 namespace Event {
 

@@ -9,9 +9,13 @@
 #include <memory>
 #include <string>
 
-#include "../api/IoError.h"
+#include "include/api/IoError.h"
+#include "include/buffer/Buffer.h"
 #include "Address.h"
-#include "ListenSocket.h"
+#include "include/common/Optref.h"
+#include "include/common/Time.h"
+#include "include/network/Socket.h"
+#include "src/common/common/Interval_value.h"
 
 namespace Network {
 
@@ -84,7 +88,7 @@ namespace Network {
         /**
          * @return factory for writing to a UDP socket.
          */
-        virtual UdpPacketWriterFactory& packetWriterFactory() = 0;
+        //virtual UdpPacketWriterFactory& packetWriterFactory() = 0;
 
         /**
          * @param address is used to query the address specific router.
@@ -213,12 +217,12 @@ namespace Network {
          * @return the connection balancer for this listener. All listeners have a connection balancer,
          *         though the implementation may be a NOP balancer.
          */
-        virtual ConnectionBalancer& connectionBalancer(const Network::Address::Instance& address) = 0;
+        //virtual ConnectionBalancer& connectionBalancer(const Network::Address::Instance& address) = 0;
 
         /**
          * Open connection resources for this listener.
          */
-        virtual ResourceLimit& openConnections() = 0;
+        //virtual ResourceLimit& openConnections() = 0;
 
         /**
          * @return std::vector<AccessLog::InstanceSharedPtr> access logs emitted by the listener.
@@ -233,7 +237,7 @@ namespace Network {
         /**
          * @return init manager of the listener.
          */
-        virtual Init::Manager& initManager() = 0;
+        //virtual Init::Manager& initManager() = 0;
 
         /**
          * @return bool whether the listener should avoid blocking connections based on the globally set
@@ -253,7 +257,7 @@ namespace Network {
          * Called when a new connection is accepted.
          * @param socket supplies the socket that is moved into the callee.
          */
-        virtual void onAccept(ConnectionSocketPtr&& socket) = 0;
+        //virtual void onAccept(ConnectionSocketPtr&& socket) = 0;
 
         enum class RejectCause {
             GlobalCxLimit,
@@ -262,7 +266,7 @@ namespace Network {
         /**
          * Called when a new connection is rejected.
          */
-        virtual void onReject(RejectCause cause) = 0;
+        //virtual void onReject(RejectCause cause) = 0;
     };
 
 /**
@@ -355,7 +359,7 @@ namespace Network {
          * Returns the pointer to the udp_packet_writer associated with the
          * UdpListenerCallback
          */
-        virtual UdpPacketWriter& udpPacketWriter() = 0;
+        //virtual UdpPacketWriter& udpPacketWriter() = 0;
 
         /**
          * Returns the index of this worker, in the range of [0, concurrency).

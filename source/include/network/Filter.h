@@ -10,7 +10,6 @@
 #include "include/buffer/Buffer.h"
 #include "include/event/Dispatcher.h"
 #include "include/network/Address.h"
-#include "include/network/ListenSocket.h"
 #include "include/api/IoError.h"
 
 namespace Network {
@@ -555,16 +554,16 @@ namespace Network {
                                                   UdpReadFilterCallbacks& callbacks) = 0;
     };
 
-/**
- * Network filter matching context data for unified matchers.
- */
+    /**
+     * Network filter matching context data for unified matchers.
+     */
     class MatchingData {
     public:
         static absl::string_view name() { return "network"; }
 
         virtual ~MatchingData() = default;
 
-        virtual const ConnectionSocket& socket() const = 0;
+/*        virtual const ConnectionSocket& socket() const = 0;
 
         const ConnectionInfoProvider& connectionInfoProvider() const {return socket().connectionInfoProvider();}
 
@@ -572,7 +571,7 @@ namespace Network {
 
         const Address::Instance& remoteAddress() const {
             return *connectionInfoProvider().remoteAddress();
-        }
+        }*/
 
         //Ssl::ConnectionInfoConstSharedPtr ssl() const { return connectionInfoProvider().sslConnection(); }
     };

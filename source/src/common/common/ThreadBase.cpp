@@ -6,7 +6,8 @@
 
 #include <thread>
 #include <absl/container/flat_hash_map.h>
-#include <bits/syscall.h>
+//#include <bits/syscall.h>
+
 #include "Macros.h"
 
 namespace Thread {
@@ -89,11 +90,9 @@ namespace Thread {
     bool TestThread::isTestThread() {
         // Keep this implementation consistent with TEST_THREAD_SUPPORTED, defined in thread.h.
         // https://stackoverflow.com/questions/4867839/how-can-i-tell-if-pthread-self-is-the-main-first-thread-in-the-process
-#ifdef __linux__
+
         return getpid() == syscall(SYS_gettid);
-#elif defined(__APPLE__)
-        return pthread_main_np() != 0;
-#endif
+
         // Note: final #else fallback omitted intentionally.
     }
 #endif

@@ -1,3 +1,9 @@
 [submodule "3rd/libevent"]
 	path = 3rd/libevent
 	url = https://github.com/libevent/libevent.git
+[submodule "build/3rd/abseil-cpp"]
+	path = build/3rd/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
+[submodule "3rd/abseil-cpp"]
+	path = 3rd/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git

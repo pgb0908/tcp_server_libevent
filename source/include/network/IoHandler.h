@@ -11,11 +11,22 @@
 #include "absl/container/fixed_array.h"
 #include "absl/types/optional.h"
 
-#include "../event/Dispatcher.h"
-#include "../api/OsSysCallsCommon.h"
-#include "../api/IoError.h"
+
 #include "Address.h"
-#include "../buffer/Buffer.h"
+#include "include/api/IoError.h"
+#include "include/api/OsSysCallsCommon.h"
+#include "include/common/Platform.h"
+#include "include/event/FileEvent.h"
+
+
+namespace Buffer {
+    struct RawSlice;
+    class Instance;
+} // namespace Buffer
+
+namespace Event {
+    class Dispatcher;
+} // namespace Event
 
 using RawSliceArrays = absl::FixedArray<absl::FixedArray<Buffer::RawSlice>>;
 
@@ -27,6 +38,8 @@ namespace Network {
         uint8_t buf_[2048];
         unsigned long buf_size_;
     };
+
+
 
 /**
  * IoHandle: an abstract interface for all I/O operations

@@ -21,6 +21,7 @@
 #include "../common/ScopeTrackedObject.h"
 #include "../common/Platform.h"
 #include "include/network/Connection.h"
+#include "include/network/Listener.h"
 
 namespace Event {
 
@@ -189,10 +190,10 @@ namespace Event {
          * @param stream_info info object for the server connection
          * @return Network::ConnectionPtr a server connection that is owned by the caller.
          */
-        virtual Network::ServerConnectionPtr
+/*        virtual Network::ServerConnectionPtr
         createServerConnection(Network::ConnectionSocketPtr &&socket,
                                Network::TransportSocketPtr &&transport_socket,
-                               StreamInfo::StreamInfo &stream_info) = 0;
+                               StreamInfo::StreamInfo &stream_info) = 0;*/
 
         /**
          * Creates an instance of Envoy's Network::ClientConnection. Does NOT initiate the connection;
@@ -227,10 +228,10 @@ namespace Event {
          * connection limit.
          * @return Network::ListenerPtr a new listener that is owned by the caller.
          */
-        virtual Network::ListenerPtr createListener(Network::SocketSharedPtr &&socket,
+/*        virtual Network::ListenerPtr createListener(Network::SocketSharedPtr &&socket,
                                                     Network::TcpListenerCallbacks &cb,
                                                     Runtime::Loader &runtime, bool bind_to_port,
-                                                    bool ignore_global_conn_limit) = 0;
+                                                    bool ignore_global_conn_limit) = 0;*/
 
         /**
          * Creates a logical udp listener on a specific port.
@@ -239,9 +240,9 @@ namespace Event {
          * @param config provides the UDP socket configuration.
          * @return Network::ListenerPtr a new listener that is owned by the caller.
          */
-        virtual Network::UdpListenerPtr
+/*        virtual Network::UdpListenerPtr
         createUdpListener(Network::SocketSharedPtr socket, Network::UdpListenerCallbacks &cb,
-                          const envoy::config::core::v3::UdpSocketConfig &config) = 0;
+                          const envoy::config::core::v3::UdpSocketConfig &config) = 0;*/
 
         /**
          * Submits an item for deferred delete. @see DeferredDeletable.

@@ -13,7 +13,6 @@
 #include "include/buffer/Buffer.h"
 #include "include/event/DeferredDeletable.h"
 #include "include/network/Socket.h"
-#include "include/network/ListenSocket.h"
 #include "include/network/Filter.h"
 
 namespace Network {
@@ -190,9 +189,9 @@ namespace Network {
         /**
          * @return the connection info provider backing this connection.
          */
-        virtual ConnectionInfoSetter& connectionInfoSetter() = 0;
+/*        virtual ConnectionInfoSetter& connectionInfoSetter() = 0;
         virtual const ConnectionInfoProvider& connectionInfoProvider() const = 0;
-        virtual ConnectionInfoProviderSharedPtr connectionInfoProviderSharedPtr() const = 0;
+        virtual ConnectionInfoProviderSharedPtr connectionInfoProviderSharedPtr() const = 0;*/
 
         /**
          * Credentials of the peer of a socket as decided by SO_PEERCRED.
@@ -267,22 +266,22 @@ namespace Network {
          * write buffer, onBelowWriteBufferHighWatermark is called which similarly allows subscribers
          * resuming reading.
          */
-        virtual void setBufferLimits(uint32_t limit) = 0;
+        //virtual void setBufferLimits(uint32_t limit) = 0;
 
         /**
          * Get the value set with setBufferLimits.
          */
-        virtual uint32_t bufferLimit() const = 0;
+        //virtual uint32_t bufferLimit() const = 0;
 
         /**
          * @return boolean telling if the connection is currently above the high watermark.
          */
-        virtual bool aboveHighWatermark() const = 0;
+        //virtual bool aboveHighWatermark() const = 0;
 
         /**
          * Get the socket options set on this connection.
          */
-        virtual const ConnectionSocket::OptionsSharedPtr& socketOptions() const = 0;
+       // virtual const ConnectionSocket::OptionsSharedPtr& socketOptions() const = 0;
 
         /**
          * The StreamInfo object associated with this connection. This is typically
