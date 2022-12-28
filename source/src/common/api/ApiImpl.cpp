@@ -25,7 +25,7 @@ namespace Api {
               process_context_(process_context), watermark_factory_(std::move(watermark_factory)) {}*/
 
     Event::DispatcherPtr Impl::allocateDispatcher(const std::string& name) {
-        return std::make_unique<Event::DispatcherImpl>(name, *this);
+        return std::make_unique<Event::DispatcherImpl>(name, *this, time_system_);
     }
 
 /*    Event::DispatcherPtr

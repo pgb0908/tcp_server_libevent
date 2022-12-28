@@ -3,19 +3,21 @@
 //
 
 #include <iostream>
-#include "../../source/src/Server.h"
+#include "src/server/Server.h"
 #include "src/common/common/RandomGeneratorImpl.h"
 #include "src/common/common/posix/ThreadImpl.h"
 #include "src/common/api/ApiImpl.h"
+#include "src/common/event/RealTimeSystem.h"
 
 int main() {
-    myTime time;
+    Event::RealTimeSystem realTimeSystem;
     Random::RandomGeneratorImpl random;
     Thread::ThreadFactoryImplPosix threadFactoryImplPosix;
-    auto api = Api::Impl(threadFactoryImplPosix, time, random);
+    auto api = Api::Impl(threadFactoryImplPosix, realTimeSystem, random);
 
-    auto server = Server(api);
+    auto server = Server::Server(api, realTimeSystem);
 
+    server.initialize();
     server.run();
 
     return 0;

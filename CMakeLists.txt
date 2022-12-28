@@ -13,7 +13,7 @@ add_subdirectory(3rd/abseil-cpp)
 include_directories(${PROJECT_SOURCE_DIR}/source)
 
 set(SOURCE
-        source/src/Server.cpp
+        source/src/server/Server.cpp
         source/src/common/event/DispatcherImpl.cpp
         source/src/common/event/EventImplBase.cpp
         source/src/common/event/posix/SignalImpl.cpp
@@ -33,13 +33,29 @@ set(SOURCE
         source/src/common/common/Statusor.h
         source/src/common/common/SafeMemcpy.h
         source/src/common/api/ApiImpl.cpp
-        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h)
+        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h source/include/server/LifecycleNotifier.h source/src/common/common/Cleanup.h source/src/common/event/RealTimeSystem.cpp source/src/common/event/RealTimeSystem.h source/src/common/common/Utility.cpp source/src/common/common/Utility.h)
 
 add_library(envoy ${SOURCE})
 
 find_package(OpenSSL REQUIRED)
 
-target_link_libraries(envoy event absl::strings absl::base absl::synchronization OpenSSL::SSL z)
+target_link_libraries(envoy
+        event
+        absl::algorithm
+        absl::base
+        absl::debugging
+        absl::flat_hash_map
+        absl::flags
+        absl::memory
+        absl::meta
+        absl::numeric
+        absl::random_random
+        absl::strings
+        absl::synchronization
+        absl::time
+        absl::utility
+        OpenSSL::SSL
+        z)
 
 add_subdirectory(example)
 

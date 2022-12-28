@@ -12,9 +12,18 @@
 #include "FileEventImpl.h"
 
 namespace Event {
-    DispatcherImpl::DispatcherImpl(const std::string &name, Api::Api &api)
-            : name_(name), random_generator_(api.randomGenerator()),
-              thread_factory_(api.threadFactory()), current_to_delete_(&to_delete_1_){
+    DispatcherImpl::DispatcherImpl(const std::string &name, Api::Api &api, Event::TimeSystem& time_system)
+            : name_(name), random_generator_(api.randomGenerator()), time_source_(api.timeSource()),
+              thread_factory_(api.threadFactory()), current_to_delete_(&to_delete_1_),
+              scheduler_(time_system.createScheduler(base_scheduler_, base_scheduler_)),
+              thread_local_delete_cb_(
+                      base_scheduler_.createSchedulableCallback([this]() -> void { runThreadLocalDelete(); })),
+              deferred_delete_cb_(base_scheduler_.createSchedulableCallback(
+                      [this]() -> void { clearDeferredDeleteList(); })),
+              post_cb_(base_scheduler_.createSchedulableCallback([this]() -> void { runPostCallbacks(); })){
+        updateApproximateMonotonicTimeInternal();
+        base_scheduler_.registerOnPrepareCallback(
+                std::bind(&DispatcherImpl::updateApproximateMonotonicTime, this));
     }
 
 /*    DispatcherImpl::DispatcherImpl(const std::string& name, Api::Api& api,
@@ -317,7 +326,7 @@ namespace Event {
     void DispatcherImpl::updateApproximateMonotonicTime() { updateApproximateMonotonicTimeInternal(); }
 
     void DispatcherImpl::updateApproximateMonotonicTimeInternal() {
-        //approximate_monotonic_time_ = time_source_.monotonicTime();
+        approximate_monotonic_time_ = time_source_.monotonicTime();
     }
 
     void DispatcherImpl::runThreadLocalDelete() {
