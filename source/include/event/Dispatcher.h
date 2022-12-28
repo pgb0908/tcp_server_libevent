@@ -159,7 +159,7 @@ namespace Event {
         /**
          * Returns a time-source to use with this dispatcher.
          */
-        virtual TimeSource &timeSource() = 0;
+        //virtual TimeSource &timeSource() = 0;
 
         /**
          * Returns a recently cached MonotonicTime value.

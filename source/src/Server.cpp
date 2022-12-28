@@ -3,7 +3,12 @@
 //
 
 #include "Server.h"
+
+#include <memory>
 #include "src/common/event/DispatcherImpl.h"
+#include "src/common/api/ApiImpl.h"
+#include "src/common/common/RandomGeneratorImpl.h"
+#include "src/common/common/posix/ThreadImpl.h"
 
 void Server::run() {
 
@@ -37,21 +42,11 @@ void Server::shutdown() {
             server_.runtime());
 }*/
 
-Server::Server(){
-    myTime time;
-    //dispatcher_ = std::make_unique<Event::DispatcherImpl>("dispahter1", , time);
-/*    listener_ = std::make_unique<ListenerImpl>();
-    workerFactory_ = std::make_unique<ProdWorkerFactory>();
 
-    // worker에게 listener 할당
-    for (int i = 0; i < 2; i++) {
-        workers_.emplace_back(
-                workerFactory_->createWorker(i, std::string("worker_").append(std::to_string(i))));
-    }
+Server::Server(Api::Api& api) :
+               api_(api),
+               dispatcher_(std::make_unique<Event::DispatcherImpl>("main", api_)){
 
-    for (const auto& worker : workers_) {
-        addListenerToWorker(*worker, *listener_);
-    }*/
 }
 
 SystemTime myTime::systemTime() {

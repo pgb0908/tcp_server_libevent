@@ -39,9 +39,9 @@ namespace Api {
          * @param scaled_timer_factory the factory to use when creating the scaled timer manager.
          * @return Event::DispatcherPtr which is owned by the caller.
          */
-        virtual Event::DispatcherPtr
+/*        virtual Event::DispatcherPtr
         allocateDispatcher(const std::string& name,
-                           const Event::ScaledRangeTimerManagerFactory& scaled_timer_factory) = 0;
+                           const Event::ScaledRangeTimerManagerFactory& scaled_timer_factory) = 0;*/
 
         /**
          * Allocate a dispatcher.
@@ -51,8 +51,8 @@ namespace Api {
          * @param watermark_factory the watermark factory, ownership is transferred to the dispatcher.
          * @return Event::DispatcherPtr which is owned by the caller.
          */
-        virtual Event::DispatcherPtr
-        allocateDispatcher(const std::string& name, Buffer::WatermarkFactoryPtr&& watermark_factory) = 0;
+/*        virtual Event::DispatcherPtr
+        allocateDispatcher(const std::string& name, Buffer::WatermarkFactoryPtr&& watermark_factory) = 0;*/
 
         /**
          * @return a reference to the ThreadFactory

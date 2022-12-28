@@ -36,7 +36,7 @@ namespace Event {
      */
     class DispatcherImpl : public Dispatcher {
     public:
-        DispatcherImpl(const std::string &name, Api::Api &api, TimeSystem &time_system);
+        DispatcherImpl(const std::string &name, Api::Api &api);
 
 /*        DispatcherImpl(const std::string &name, Api::Api &api, Event::TimeSystem &time_systems,
                        const Buffer::WatermarkFactorySharedPtr &watermark_factory);*/
@@ -63,7 +63,7 @@ namespace Event {
 
         // void registerWatchdog(const Server::WatchDogSharedPtr &watchdog,std::chrono::milliseconds min_touch_interval) override;
 
-        TimeSource &timeSource() override { return time_source_; }
+        //TimeSource &timeSource() override { return time_source_; }
 
         //void initializeStats(Stats::Scope &scope, const absl::optional <std::string> &prefix) override;
 
@@ -180,7 +180,7 @@ namespace Event {
 
         const std::string name_;
         Thread::ThreadFactory &thread_factory_;
-        TimeSource &time_source_;
+        //TimeSource &time_source_;
         Random::RandomGenerator &random_generator_;
         //Filesystem::Instance &file_system_;
         std::string stats_prefix_;

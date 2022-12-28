@@ -4,9 +4,18 @@
 
 #include <iostream>
 #include "../../source/src/Server.h"
+#include "src/common/common/RandomGeneratorImpl.h"
+#include "src/common/common/posix/ThreadImpl.h"
+#include "src/common/api/ApiImpl.h"
 
 int main() {
-    Server server;
+    myTime time;
+    Random::RandomGeneratorImpl random;
+    Thread::ThreadFactoryImplPosix threadFactoryImplPosix;
+    auto api = Api::Impl(threadFactoryImplPosix, time, random);
+
+    auto server = Server(api);
+
     server.run();
 
     return 0;

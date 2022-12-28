@@ -22,11 +22,24 @@ set(SOURCE
         source/src/common/event/SchedulableCbImpl.cpp
         source/src/common/event/TimerImpl.cpp
         source/src/common/event/FileEventImpl.cpp
-        source/src/common/common/ThreadBase.cpp source/src/common/network/BaseListenerImpl.cpp source/src/common/network/BaseListenerImpl.h source/src/common/api/posix/OsSysCallsImpl.cpp source/src/common/api/posix/OsSysCallsImpl.h source/include/api/OsSysCalls.h source/src/common/network/AddressImpl.cpp source/src/common/network/AddressImpl.h source/src/common/common/Statusor.h source/src/common/common/SafeMemcpy.h)
+        source/src/common/common/ThreadBase.cpp
+        source/src/common/network/BaseListenerImpl.cpp
+        source/src/common/network/BaseListenerImpl.h
+        source/src/common/api/posix/OsSysCallsImpl.cpp
+        source/src/common/api/posix/OsSysCallsImpl.h
+        source/include/api/OsSysCalls.h
+        source/src/common/network/AddressImpl.cpp
+        source/src/common/network/AddressImpl.h
+        source/src/common/common/Statusor.h
+        source/src/common/common/SafeMemcpy.h
+        source/src/common/api/ApiImpl.cpp
+        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h)
 
 add_library(envoy ${SOURCE})
 
-target_link_libraries(envoy event absl::strings)
+find_package(OpenSSL REQUIRED)
+
+target_link_libraries(envoy event absl::strings absl::base absl::synchronization OpenSSL::SSL z)
 
 add_subdirectory(example)
 

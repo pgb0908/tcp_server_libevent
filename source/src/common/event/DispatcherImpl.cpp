@@ -12,8 +12,8 @@
 #include "FileEventImpl.h"
 
 namespace Event {
-    DispatcherImpl::DispatcherImpl(const std::string &name, Api::Api &api, TimeSystem &time_system)
-            : name_(name), time_source_(time_system), random_generator_(api.randomGenerator()),
+    DispatcherImpl::DispatcherImpl(const std::string &name, Api::Api &api)
+            : name_(name), random_generator_(api.randomGenerator()),
               thread_factory_(api.threadFactory()), current_to_delete_(&to_delete_1_){
     }
 
@@ -317,7 +317,7 @@ namespace Event {
     void DispatcherImpl::updateApproximateMonotonicTime() { updateApproximateMonotonicTimeInternal(); }
 
     void DispatcherImpl::updateApproximateMonotonicTimeInternal() {
-        approximate_monotonic_time_ = time_source_.monotonicTime();
+        //approximate_monotonic_time_ = time_source_.monotonicTime();
     }
 
     void DispatcherImpl::runThreadLocalDelete() {
