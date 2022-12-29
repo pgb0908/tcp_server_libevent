@@ -4,6 +4,7 @@
 
 #include "SchedulableCbImpl.h"
 
+#include <iostream>
 #include "event2/event.h"
 
 namespace Event {
@@ -12,6 +13,7 @@ namespace Event {
                                                      std::function<void()> cb)
             : cb_(cb) {
         //ASSERT(cb_);
+        std::cout << "check" << std::endl;
         evtimer_assign(
                 &raw_event_, libevent.get(),
                 [](evutil_socket_t, short, void* arg) -> void {
@@ -43,6 +45,7 @@ namespace Event {
 
     void SchedulableCallbackImpl::cancel() { event_del(&raw_event_); }
 
-    bool SchedulableCallbackImpl::enabled() { return 0 != evtimer_pending(&raw_event_, nullptr); }
+    bool SchedulableCallbackImpl::enabled() {
+        return 0 != evtimer_pending(&raw_event_, nullptr); }
 
 } // namespace Event

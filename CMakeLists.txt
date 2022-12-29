@@ -6,9 +6,9 @@ conan_basic_setup()
 
 set(CMAKE_CXX_STANDARD 17)
 
+
 add_subdirectory(3rd/libevent)
 add_subdirectory(3rd/abseil-cpp)
-
 
 include_directories(${PROJECT_SOURCE_DIR}/source)
 
@@ -38,6 +38,9 @@ set(SOURCE
 add_library(envoy ${SOURCE})
 
 find_package(OpenSSL REQUIRED)
+
+# 명시적으로 헤더파일 위치 지정해줌
+target_include_directories(envoy PUBLIC 3rd/libevent/include)
 
 # https://chromium.googlesource.com/external/github.com/abseil/abseil-cpp/+/HEAD/CMake/README.md
 target_link_libraries(envoy

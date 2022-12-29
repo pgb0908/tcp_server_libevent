@@ -5,6 +5,7 @@
 #include "Server.h"
 
 #include <memory>
+#include "fmt/format.h"
 #include "src/common/event/DispatcherImpl.h"
 #include "src/common/api/ApiImpl.h"
 #include "src/common/common/RandomGeneratorImpl.h"
@@ -71,6 +72,7 @@ namespace Server {
         if (workers_started_) {
             const auto it2 = stage_completable_callbacks_.find(stage);
             if (it2 != stage_completable_callbacks_.end()) {
+                std::cout << "Notifying" << it2->second.size() << "callback(s) with completion." << std::endl;
                 //ENVOY_LOG(info, "Notifying {} callback(s) with completion.", it2->second.size());
                 for (const StageCallbackWithCompletion& callback : it2->second) {
                     callback([cb_guard] {});
