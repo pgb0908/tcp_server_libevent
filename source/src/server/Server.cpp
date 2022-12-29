@@ -10,10 +10,12 @@
 #include "src/common/common/RandomGeneratorImpl.h"
 #include "src/common/common/posix/ThreadImpl.h"
 #include "src/common/common/Cleanup.h"
+#include "src/server/ListenerManagerImpl.h"
 
 namespace Server {
     void Server::run() {
         std::cout << "starting main dispatch loop" << std::endl;
+        dispatcher_->post([](){std::cout << "hello" << std::endl;});
         dispatcher_->post([this] { notifyCallbacksForStage(Stage::Startup); });
         dispatcher_->run(Event::Dispatcher::RunType::Block);
         std::cout << "main dispatch loop exited" << std::endl;
@@ -23,26 +25,13 @@ namespace Server {
 
     }
 
-/*void Server::addListenerToWorker(Worker &worker, ListenerImpl &listener) {
-    worker.addListener(
-            overridden_listener, listener,
-            [this, completion_callback]() -> void {
-                // The add listener completion runs on the worker thread. Post back to the main thread to
-                // avoid locking.
-                server_.dispatcher().post([this, completion_callback]() -> void {
-                    // stats_.listener_create_success_.inc();
-                    if (completion_callback) {
-                        completion_callback();
-                    }
-                });
-            },
-            server_.runtime());
-}*/
-
 
     Server::Server(Api::Api &api, Event::TimeSystem& timeSystem) :
             api_(api),
-            dispatcher_(std::make_unique<Event::DispatcherImpl>("main", api_, timeSystem)),workers_started_(false) {
+            dispatcher_(std::make_unique<Event::DispatcherImpl>("main", api_, timeSystem)),workers_started_(false),
+            listener_component_factory_(*this),
+            worker_factory_(api_)
+    {
     }
 
     ServerLifecycleNotifier::HandlePtr
@@ -91,12 +80,10 @@ namespace Server {
     }
 
     void Server::initialize() {
-/*        for (const auto &worker: workers_) {
-            worker->start([]() {
-                std::cout << "hello" << std::endl;
-                return;
-            });
-        }*/
+        // Workers get created first so they register for thread local updates.
+        //listener_manager_ = std::make_unique<ListenerManagerImpl>(*this, listener_component_factory_, worker_factory_);
+
+
     }
 
 

@@ -202,15 +202,13 @@ namespace Event {
 
         SchedulableCallbackPtr post_cb_;
         Thread::MutexBasicLockable post_lock_;
-        std::list <std::function<void()>> post_callbacks_
-        ABSL_GUARDED_BY(post_lock_);
+        std::list <std::function<void()>> post_callbacks_ ABSL_GUARDED_BY(post_lock_);
 
         std::vector <DeferredDeletablePtr> to_delete_1_;
         std::vector <DeferredDeletablePtr> to_delete_2_;
         std::vector <DeferredDeletablePtr> *current_to_delete_;
 
-        absl::InlinedVector<const ScopeTrackedObject *, ExpectedMaxTrackedObjectStackDepth>
-                tracked_object_stack_;
+        absl::InlinedVector<const ScopeTrackedObject *, ExpectedMaxTrackedObjectStackDepth> tracked_object_stack_;
         bool deferred_deleting_{};
         MonotonicTime approximate_monotonic_time_;
         //WatchdogRegistrationPtr watchdog_registration_;

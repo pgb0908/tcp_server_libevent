@@ -12,6 +12,9 @@
 #include "include/server/LifecycleNotifier.h"
 
 #include "absl/container/node_hash_map.h"
+#include "include/server/ListenerManager.h"
+#include "ListenerManagerImpl.h"
+#include "WorkerImpl.h"
 
 namespace Server {
 
@@ -24,6 +27,7 @@ namespace Server {
         Event::SchedulerPtr
         createScheduler(Event::Scheduler &base_scheduler, Event::CallbackScheduler &cb_scheduler) override;
     };
+
 
 
 class Server : public ServerLifecycleNotifier{
@@ -44,6 +48,8 @@ public:
 
     void initialize();
 
+    size_t concurrency() {return 2;};
+
 private:
     Api::Api& api_;
     Event::DispatcherPtr dispatcher_;
@@ -54,11 +60,12 @@ private:
     absl::node_hash_map<Stage, LifecycleNotifierCallbacks> stage_callbacks_;
     absl::node_hash_map<Stage, LifecycleNotifierCompletionCallbacks> stage_completable_callbacks_;
 
-    //void addListenerToWorker(Worker& worker, ListenerImpl& listener);
-    // std::unique_ptr<ListenerImpl> listener_;
-    //std::unique_ptr<ProdWorkerFactory> workerFactory_;
+    std::unique_ptr<ListenerManager> listener_manager_;
 
-    //std::vector<WorkerPtr> workers_;
+    ProdListenerComponentFactory listener_component_factory_;
+    ProdWorkerFactory worker_factory_;
+
+
 
 };
 }

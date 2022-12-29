@@ -14,13 +14,15 @@
 namespace Event {
     DispatcherImpl::DispatcherImpl(const std::string &name, Api::Api &api, Event::TimeSystem& time_system)
             : name_(name), random_generator_(api.randomGenerator()), time_source_(api.timeSource()),
-              thread_factory_(api.threadFactory()), current_to_delete_(&to_delete_1_),
+              thread_factory_(api.threadFactory()),
               scheduler_(time_system.createScheduler(base_scheduler_, base_scheduler_)),
               thread_local_delete_cb_(
                       base_scheduler_.createSchedulableCallback([this]() -> void { runThreadLocalDelete(); })),
               deferred_delete_cb_(base_scheduler_.createSchedulableCallback(
                       [this]() -> void { clearDeferredDeleteList(); })),
-              post_cb_(base_scheduler_.createSchedulableCallback([this]() -> void { runPostCallbacks(); })){
+              post_cb_(base_scheduler_.createSchedulableCallback([this]() -> void { runPostCallbacks(); })),
+              current_to_delete_(&to_delete_1_)
+    {
         updateApproximateMonotonicTimeInternal();
         base_scheduler_.registerOnPrepareCallback(
                 std::bind(&DispatcherImpl::updateApproximateMonotonicTime, this));
@@ -109,6 +111,7 @@ namespace Event {
         }
 
         //ENVOY_LOG(trace, "clearing deferred deletion list (size={})", num_to_delete);
+        std::cout << "clearing deferred deletion list " <<  deferred_deleting_ << std::endl;
 
         // Swap the current deletion vector so that if we do deferred delete while we are deleting, we
         // use the other vector. We will get another callback to delete that vector.

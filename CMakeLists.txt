@@ -33,12 +33,13 @@ set(SOURCE
         source/src/common/common/Statusor.h
         source/src/common/common/SafeMemcpy.h
         source/src/common/api/ApiImpl.cpp
-        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h source/include/server/LifecycleNotifier.h source/src/common/common/Cleanup.h source/src/common/event/RealTimeSystem.cpp source/src/common/event/RealTimeSystem.h source/src/common/common/Utility.cpp source/src/common/common/Utility.h)
+        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h source/include/server/LifecycleNotifier.h source/src/common/common/Cleanup.h source/src/common/event/RealTimeSystem.cpp source/src/common/event/RealTimeSystem.h source/src/common/common/Utility.cpp source/src/common/common/Utility.h source/include/server/Worker.h source/include/server/ListenerManager.h source/src/server/WorkerImpl.cpp source/src/server/WorkerImpl.h source/src/server/ConnectionHanlderImpl.cpp source/src/server/ConnectionHanlderImpl.h source/include/network/ConnectionHandler.h source/include/network/ListenSocket.h source/src/server/ListenerManagerImpl.cpp source/src/server/ListenerManagerImpl.h source/src/server/ListenerImpl.cpp source/src/server/ListenerImpl.h)
 
 add_library(envoy ${SOURCE})
 
 find_package(OpenSSL REQUIRED)
 
+# https://chromium.googlesource.com/external/github.com/abseil/abseil-cpp/+/HEAD/CMake/README.md
 target_link_libraries(envoy
         event
         absl::algorithm
@@ -55,6 +56,7 @@ target_link_libraries(envoy
         absl::time
         absl::utility
         OpenSSL::SSL
+        fmt
         z)
 
 add_subdirectory(example)

@@ -83,7 +83,7 @@ namespace Network {
         /**
          * @return factory for creating a listener.
          */
-        virtual ActiveUdpListenerFactory& listenerFactory() = 0;
+        //virtual ActiveUdpListenerFactory& listenerFactory() = 0;
 
         /**
          * @return factory for writing to a UDP socket.
@@ -243,7 +243,7 @@ namespace Network {
          * @return bool whether the listener should avoid blocking connections based on the globally set
          * limit.
          */
-        virtual bool ignoreGlobalConnLimit() const = 0;
+        //virtual bool ignoreGlobalConnLimit() const = 0;
     };
 
 /**
