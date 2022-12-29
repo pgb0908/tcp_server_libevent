@@ -178,8 +178,7 @@ namespace Server {
          * listeners. The references are only valid in the context of the current call stack and should
          * not be stored.
          */
-        virtual std::vector<std::reference_wrapper<Network::ListenerConfig>>
-        listeners(ListenerState state = ListenerState::ACTIVE) = 0;
+        //virtual std::vector<std::reference_wrapper<Network::ListenerConfig>> listeners(ListenerState state = ListenerState::ACTIVE) = 0;
 
         /**
          * @return uint64_t the total number of connections owned by all listeners across all workers.

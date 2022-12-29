@@ -81,7 +81,7 @@ namespace Server {
 
     void Server::initialize() {
         // Workers get created first so they register for thread local updates.
-        //listener_manager_ = std::make_unique<ListenerManagerImpl>(*this, listener_component_factory_, worker_factory_);
+        listener_manager_ = std::make_unique<ListenerManagerImpl>(*this, listener_component_factory_, worker_factory_);
 
 
     }
