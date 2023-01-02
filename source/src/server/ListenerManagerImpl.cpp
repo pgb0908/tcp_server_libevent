@@ -259,6 +259,7 @@ namespace Server {
         for (uint32_t i = 0; i < server.concurrency(); i++) {
             workers_.emplace_back(
                     worker_factory.createWorker(i, absl::StrCat("worker_", i)));
+            std::cout << fmt::format("{} worker is made by main", i) << std::endl;
         }
     }
 

@@ -19,6 +19,14 @@ namespace Server {
         dispatcher_->post([](){std::cout << "hello" << std::endl;});
         dispatcher_->post([this] { notifyCallbacksForStage(Stage::Startup); });
         dispatcher_->run(Event::Dispatcher::RunType::Block);
+
+
+        dispatcher_->post([this] { notifyCallbacksForStage(Stage::PostInit); });
+
+        Event::TimerPtr timer = dispatcher_->createTimer([]() ->void{ std::cout << "<<<<  timer called" << std::endl;});
+        timer->enableTimer(std::chrono::milliseconds(100));
+
+
         std::cout << "main dispatch loop exited" << std::endl;
     }
 
@@ -72,7 +80,8 @@ namespace Server {
         if (workers_started_) {
             const auto it2 = stage_completable_callbacks_.find(stage);
             if (it2 != stage_completable_callbacks_.end()) {
-                std::cout << "Notifying" << it2->second.size() << "callback(s) with completion." << std::endl;
+                //std::cout << "Notifying" << it2->second.size() << "callback(s) with completion." << std::endl;
+                std::cout << fmt::format("Notifying {} callback(s) with completion.", it2->second.size()) << std::endl;
                 //ENVOY_LOG(info, "Notifying {} callback(s) with completion.", it2->second.size());
                 for (const StageCallbackWithCompletion& callback : it2->second) {
                     callback([cb_guard] {});
@@ -82,6 +91,7 @@ namespace Server {
     }
 
     void Server::initialize() {
+
         // Workers get created first so they register for thread local updates.
         listener_manager_ = std::make_unique<ListenerManagerImpl>(*this, listener_component_factory_, worker_factory_);
 
