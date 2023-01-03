@@ -32,11 +32,11 @@ int main() {
                                             (struct sockaddr*)&sin, sizeof(sin));
 
     // 시그널 처리를 위한 매크로 함수
-    auto signal_event = evsignal_new(base, SIGINT, signal_cb, (void *)base);
+/*    auto signal_event = evsignal_new(base, SIGINT, signal_cb, (void *)base);
     if (!signal_event || event_add(signal_event, NULL)<0) {
         fprintf(stderr, "Could not create/add a signal event!\n");
         return 1;
-    }
+    }*/
 
     // 이 루프는 보류(pending)이거나 활성(active) 상태가 더 이상 없을 때까지
     // 또는 무언가가 event_base_loopbreak()
@@ -44,7 +44,7 @@ int main() {
     event_base_dispatch(base);
 
     evconnlistener_free(listener);
-    event_free(signal_event);
+    //event_free(signal_event);
     event_base_free(base);
 
     printf("done\n");

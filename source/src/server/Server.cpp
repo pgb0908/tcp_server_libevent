@@ -16,16 +16,20 @@
 namespace Server {
     void Server::run() {
         std::cout << "starting main dispatch loop" << std::endl;
-        dispatcher_->post([](){std::cout << "hello" << std::endl;});
         dispatcher_->post([this] { notifyCallbacksForStage(Stage::Startup); });
+
+        dispatcher_->post([](){std::cout << "hello" << std::endl;});
+
+
+        //Event::TimerPtr timer = dispatcher_->createTimer([]() ->void{ std::cout << "<<<<  timer called" << std::endl;});
+        //timer->enableTimer(std::chrono::milliseconds(10000));
+        //std::cout << "this is enabled timer : "  << timer->enabled()<< std::endl;
+
+        infinit_loop();
+
+
         dispatcher_->run(Event::Dispatcher::RunType::Block);
-
-
-        dispatcher_->post([this] { notifyCallbacksForStage(Stage::PostInit); });
-
-        Event::TimerPtr timer = dispatcher_->createTimer([]() ->void{ std::cout << "<<<<  timer called" << std::endl;});
-        timer->enableTimer(std::chrono::milliseconds(100));
-
+        //dispatcher_->post([this] { notifyCallbacksForStage(Stage::PostInit); });
 
         std::cout << "main dispatch loop exited" << std::endl;
     }

@@ -71,8 +71,7 @@ namespace Network {
  * An abstract raw connection. Free the connection or call close() to disconnect.
  */
     class Connection : public Event::DeferredDeletable,
-                       public FilterManager,
-                       public ScopeTrackedObject {
+                       public FilterManager{
     public:
         enum class State { Open, Closing, Closed };
 

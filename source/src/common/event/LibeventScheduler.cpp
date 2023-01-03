@@ -38,6 +38,7 @@ namespace Event {
 
     void LibeventScheduler::run(Dispatcher::RunType mode) {
         int flag = 0;
+
         switch (mode) {
             case Dispatcher::RunType::NonBlock:
                 flag = LibeventScheduler::flagsBasedOnEventType();

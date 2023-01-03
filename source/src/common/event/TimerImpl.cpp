@@ -5,6 +5,8 @@
 #include "TimerImpl.h"
 
 #include "event2/event.h"
+#include "src/common/common/ScopTracker.h"
+#include <iostream>
 
 namespace Event {
 
@@ -48,7 +50,8 @@ namespace Event {
         //ASSERT(dispatcher_.isThreadSafe());
         object_ = object;
 
-        event_add(&raw_event_, &tv);
+        auto i = event_add(&raw_event_, &tv);
+        std::cout << "timer event return : "<< i << std::endl;
     }
 
     bool TimerImpl::enabled() {

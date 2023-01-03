@@ -50,6 +50,18 @@ public:
 
     size_t concurrency() {return 2;};
 
+    void sayHello(){
+        std::cout << " ------------------hello" << std::endl;
+        infinit_loop();
+    }
+
+    void infinit_loop(){
+        loop_timer_ = dispatcher_->createTimer([this]()->void{
+            sayHello();});
+
+        loop_timer_->enableTimer(std::chrono::milliseconds(1000));
+    }
+
 private:
     Api::Api& api_;
     Event::DispatcherPtr dispatcher_;
@@ -64,6 +76,7 @@ private:
 
     ProdListenerComponentFactory listener_component_factory_;
     ProdWorkerFactory worker_factory_;
+    Event::TimerPtr loop_timer_;
 
 
 
