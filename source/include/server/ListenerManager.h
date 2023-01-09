@@ -157,8 +157,7 @@ namespace Server {
          *         a duplicate of the existing listener. This routine will throw an EnvoyException if
          *         there is a fundamental error preventing the listener from being added or updated.
          */
-/*        virtual bool addOrUpdateListener(const envoy::config::listener::v3::Listener& config,
-                                         const std::string& version_info, bool modifiable) = 0;*/
+        virtual bool addOrUpdateListener(const std::string& version_info, bool modifiable) = 0;
 
         /**
          * Instruct the listener manager to create an LDS API provider. This is a separate operation

@@ -10,6 +10,7 @@
 #include "absl/synchronization/blocking_counter.h"
 
 #include "src/server/Server.h"
+#include "ListenerImpl.h"
 
 namespace Server {
     namespace {
@@ -340,21 +341,21 @@ namespace Server {
         return {ALL_LISTENER_MANAGER_STATS(POOL_COUNTER(scope), POOL_GAUGE(scope))};
     }*/
 
-/*    bool ListenerManagerImpl::addOrUpdateListener(const envoy::config::listener::v3::Listener& config,
-                                                  const std::string& version_info, bool added_via_api) {
+    bool ListenerManagerImpl::addOrUpdateListener(const std::string& version_info, bool added_via_api) {
         std::string name;
-        if (!config.name().empty()) {
+/*        if (!config.name().empty()) {
             name = config.name();
         } else {
             // TODO (soulxu): The random uuid name is bad for logging. We can use listening addresses in
             // the log to improve that.
             name = server_.api().randomGenerator().uuid();
-        }
+        }*/
+        name = "listener_0";
 
         // TODO(junr03): currently only one ApiListener can be installed via bootstrap to avoid having to
         // build a collection of listeners, and to have to be able to warm and drain the listeners. In the
         // future allow multiple ApiListeners, and allow them to be created via LDS as well as bootstrap.
-        if (config.has_api_listener()) {
+/*        if (config.has_api_listener()) {
             if (config.has_internal_listener()) {
                 throw EnvoyException(fmt::format(
                         "error adding listener named '{}': api_listener and internal_listener cannot be both set",
@@ -370,9 +371,10 @@ namespace Server {
                                 "allowed, and it can only be added via bootstrap configuration");
                 return false;
             }
-        }
+        }*/
 
-        auto it = error_state_tracker_.find(name);
+        addOrUpdateListenerInternal(version_info, added_via_api, name);
+/*        auto it = error_state_tracker_.find(name);
         TRY_ASSERT_MAIN_THREAD {
                 return addOrUpdateListenerInternal(config, version_info, added_via_api, name);
         }
@@ -386,10 +388,10 @@ namespace Server {
             it->second->set_details(e.what());
             it->second->mutable_failed_configuration()->PackFrom(config);
             throw e;
-        }
-        error_state_tracker_.erase(it);
+        }*/
+        //error_state_tracker_.erase(it);
         return false;
-    }*/
+    }
 
 /*    void ListenerManagerImpl::setupSocketFactoryForListener(ListenerImpl& new_listener,
                                                             const ListenerImpl& existing_listener) {
@@ -415,49 +417,45 @@ namespace Server {
         }*//*
     }*/
 
- /*   bool ListenerManagerImpl::addOrUpdateListenerInternal(
-            const envoy::config::listener::v3::Listener& config, const std::string& version_info,
-            bool added_via_api, const std::string& name) {
+    bool ListenerManagerImpl::addOrUpdateListenerInternal(const std::string& version_info,bool added_via_api, const std::string& name) {
 
-        if (listenersStopped(config)) {
+/*        if (listenersStopped(config)) {
             ENVOY_LOG(
                     debug,
                     "listener {} can not be added because listeners in the traffic direction {} are stopped",
                     name, envoy::config::core::v3::TrafficDirection_Name(config.traffic_direction()));
             return false;
-        }
+        }*/
 
-        const uint64_t hash = MessageUtil::hash(config);
-        ENVOY_LOG(debug, "begin add/update listener: name={} hash={}", name, hash);
+        //const uint64_t hash = MessageUtil::hash(config);
+        //ENVOY_LOG(debug, "begin add/update listener: name={} hash={}", name, hash);
 
-        auto existing_active_listener = getListenerByName(active_listeners_, name);
-        auto existing_warming_listener = getListenerByName(warming_listeners_, name);
+        //auto existing_active_listener = getListenerByName(active_listeners_, name);
+        //auto existing_warming_listener = getListenerByName(warming_listeners_, name);
 
         // The listener should be updated back to its original state and the warming listener should be
         // removed.
-        if (existing_warming_listener != warming_listeners_.end() &&
+/*        if (existing_warming_listener != warming_listeners_.end() &&
             existing_active_listener != active_listeners_.end() &&
             (*existing_active_listener)->blockUpdate(hash)) {
             warming_listeners_.erase(existing_warming_listener);
-            updateWarmingActiveGauges();
-            stats_.listener_modified_.inc();
             return true;
-        }
+        }*/
 
         // Do a quick blocked update check before going further. This check needs to be done against both
         // warming and active.
-        if ((existing_warming_listener != warming_listeners_.end() &&
+/*        if ((existing_warming_listener != warming_listeners_.end() &&
              (*existing_warming_listener)->blockUpdate(hash)) ||
             (existing_active_listener != active_listeners_.end() &&
              (*existing_active_listener)->blockUpdate(hash))) {
             ENVOY_LOG(debug, "duplicate/locked listener '{}'. no add/update", name);
             return false;
-        }
+        }*/
 
         ListenerImplPtr new_listener = nullptr;
 
         // In place filter chain update depends on the active listener at worker.
-        if (existing_active_listener != active_listeners_.end() &&
+/*        if (existing_active_listener != active_listeners_.end() &&
             (*existing_active_listener)->supportUpdateFilterChain(config, workers_started_)) {
             ENVOY_LOG(debug, "use in place update filter chain update path for listener name={} hash={}",
                       name, hash);
@@ -468,13 +466,16 @@ namespace Server {
             ENVOY_LOG(debug, "use full listener update path for listener name={} hash={}", name, hash);
             new_listener = std::make_unique<ListenerImpl>(config, version_info, *this, name, added_via_api,
                                                           workers_started_, hash);
-        }
+        }*/
+
+        new_listener = std::make_unique<ListenerImpl>(version_info, *this, name, added_via_api,
+                                                      workers_started_);
 
         ListenerImpl& new_listener_ref = *new_listener;
 
         bool added = false;
-        if (existing_warming_listener != warming_listeners_.end()) {
-            ASSERT(workers_started_);
+/*        if (existing_warming_listener != warming_listeners_.end()) {
+            //ASSERT(workers_started_);
             new_listener->debugLog("update warming listener");
             setupSocketFactoryForListener(*new_listener, **existing_warming_listener);
             // In this case we can just replace inline.
@@ -503,18 +504,18 @@ namespace Server {
             }
 
             added = true;
-        }
+        }*/
 
-        updateWarmingActiveGauges();
-        if (added) {
+        //updateWarmingActiveGauges();
+/*        if (added) {
             stats_.listener_added_.inc();
         } else {
             stats_.listener_modified_.inc();
-        }
+        }*/
 
         new_listener_ref.initialize();
         return true;
-    }*/
+    }
 
 /*    bool ListenerManagerImpl::hasListenerWithDuplicatedAddress(const ListenerList& list,
                                                                const ListenerImpl& listener) {

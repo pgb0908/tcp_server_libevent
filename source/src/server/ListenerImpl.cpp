@@ -274,8 +274,7 @@ namespace Server {
     //Init::Manager& ListenerFactoryContextBaseImpl::initManager() { PANIC("not implemented"); }
 
     ListenerImpl::ListenerImpl(const std::string& version_info, ListenerManagerImpl& parent,
-                               const std::string& name, bool added_via_api, bool workers_started,
-                               uint64_t hash)
+                               const std::string& name, bool added_via_api, bool workers_started)
             : parent_(parent),
               //socket_type_(config.has_internal_listener() ? Network::Socket::Type::Stream : Network::Utility::protobufAddressSocketType(config.address())),
               bind_to_port_(true), mptcp_enabled_(false),
@@ -285,7 +284,7 @@ namespace Server {
               //listener_tag_(parent_.factory_.nextListenerTag()),
               name_(name),
               added_via_api_(added_via_api),
-              workers_started_(workers_started), hash_(hash),
+              workers_started_(workers_started), hash_(11),
               //tcp_backlog_size_(-1),
      /*         validation_visitor_(
                       added_via_api_ ? parent_.server_.messageValidationContext().dynamicValidationVisitor()
@@ -813,6 +812,15 @@ namespace Server {
         }
     }
 
+    ListenerImpl::~ListenerImpl() {
+        if (!workers_started_) {
+            // We need to remove the listener_init_target_ handle from parent's initManager(), to unblock
+            // parent's initManager to get ready().
+            //listener_init_target_.ready();
+        }
+    }
+
+
 /*
     AccessLog::AccessLogManager& PerListenerFactoryContextImpl::accessLogManager() {
         return listener_factory_context_base_->accessLogManager();
@@ -932,14 +940,6 @@ namespace Server {
     }
 
 
-
-    ListenerImpl::~ListenerImpl() {
-        if (!workers_started_) {
-            // We need to remove the listener_init_target_ handle from parent's initManager(), to unblock
-            // parent's initManager to get ready().
-            listener_init_target_.ready();
-        }
-    }
 
     Init::Manager& ListenerImpl::initManager() { return *dynamic_init_manager_; }
 

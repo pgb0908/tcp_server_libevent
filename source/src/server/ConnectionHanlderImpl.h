@@ -127,7 +127,7 @@ namespace Server {
                 if (auto *listener = per_address_details->listener_->listener(); listener != nullptr) {
                     listener->setRejectFraction(listener_reject_fraction);
                 }
-                per_address_details->listener_tag_ = config.listenerTag();
+                //per_address_details->listener_tag_ = config.listenerTag();
                 per_address_details_list_.emplace_back(per_address_details);
             }
         };

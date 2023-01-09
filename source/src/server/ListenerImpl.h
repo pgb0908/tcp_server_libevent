@@ -247,7 +247,7 @@ namespace Server {
          */
         ListenerImpl( const std::string& version_info,
                      ListenerManagerImpl& parent, const std::string& name, bool added_via_api,
-                     bool workers_started, uint64_t hash);
+                     bool workers_started);
         ~ListenerImpl() override;
 
         // TODO(lambdai): Explore using the same ListenerImpl object to execute in place filter chain
@@ -271,6 +271,7 @@ namespace Server {
          */
    /*     void diffFilterChain(const ListenerImpl& another_listener,
                              std::function<void(Network::DrainableFilterChain&)> callback);*/
+
 
         /**
          * Helper functions to determine whether a listener is blocked for update or remove.

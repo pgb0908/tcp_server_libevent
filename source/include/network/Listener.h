@@ -160,13 +160,13 @@ namespace Network {
          *         destination address has been restored. 'true' when 'use_original_dst' flag in listener
          *         configuration is set, false otherwise.
          */
-        virtual bool handOffRestoredDestinationConnections() const = 0;
+        //virtual bool handOffRestoredDestinationConnections() const = 0;
 
         /**
          * @return uint32_t providing a soft limit on size of the listener's new connection read and
          * write buffers.
          */
-        virtual uint32_t perConnectionBufferLimitBytes() const = 0;
+        //virtual uint32_t perConnectionBufferLimitBytes() const = 0;
 
         /**
          * @return std::chrono::milliseconds the time to wait for all listener filters to complete
@@ -174,13 +174,13 @@ namespace Network {
          *         connection being created unless continueOnListenerFiltersTimeout() returns true.
          *         0 specifies a disabled timeout.
          */
-        virtual std::chrono::milliseconds listenerFiltersTimeout() const = 0;
+        //virtual std::chrono::milliseconds listenerFiltersTimeout() const = 0;
 
         /**
          * @return bool whether the listener should try to create a connection when listener filters
          *         time out.
          */
-        virtual bool continueOnListenerFiltersTimeout() const = 0;
+        //virtual bool continueOnListenerFiltersTimeout() const = 0;
 
         /**
          * @return Stats::Scope& the stats scope to use for all listener specific stats.
@@ -190,7 +190,7 @@ namespace Network {
         /**
          * @return uint64_t the tag the listener should use for connection handler tracking.
          */
-        virtual uint64_t listenerTag() const = 0;
+        //virtual uint64_t listenerTag() const = 0;
 
         /**
          * @return const std::string& the listener's name.
@@ -232,7 +232,7 @@ namespace Network {
         /**
          * @return pending connection backlog for TCP listeners.
          */
-        virtual uint32_t tcpBacklogSize() const = 0;
+        //virtual uint32_t tcpBacklogSize() const = 0;
 
         /**
          * @return init manager of the listener.

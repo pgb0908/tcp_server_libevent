@@ -99,6 +99,25 @@ namespace Server {
         // Workers get created first so they register for thread local updates.
         listener_manager_ = std::make_unique<ListenerManagerImpl>(*this, listener_component_factory_, worker_factory_);
 
+        // listener는 현재 하나
+        listener_manager_->addOrUpdateListener("", false);
+
+        listener_manager_->startWorkers([this]() {
+/*            if (isShutdown()) {
+                return;
+            }*/
+
+            //initialization_timer_->complete();
+            // Update server stats as soon as initialization is done.
+            //updateServerStats();
+            workers_started_ = true;
+            //hooks_.onWorkersStarted();
+            // At this point we are ready to take traffic and all listening ports are up. Notify our
+            // parent if applicable that they can stop listening and drain.
+            //restarter_.drainParentListeners();
+            //drain_manager_->startParentShutdownSequence();
+        });
+
 
     }
 

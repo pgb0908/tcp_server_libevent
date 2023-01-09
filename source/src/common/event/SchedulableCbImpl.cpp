@@ -13,7 +13,6 @@ namespace Event {
                                                      std::function<void()> cb)
             : cb_(cb) {
         //ASSERT(cb_);
-        std::cout << "check" << std::endl;
         evtimer_assign(
                 &raw_event_, libevent.get(),
                 [](evutil_socket_t, short, void* arg) -> void {

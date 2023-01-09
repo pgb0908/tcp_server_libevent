@@ -94,8 +94,8 @@ namespace Server {
         //Filter::TcpListenerFilterConfigProviderManagerImpl tcp_listener_config_provider_manager_;
     };
 
-    //class ListenerImpl;
-    //using ListenerImplPtr = std::unique_ptr<ListenerImpl>;
+    class ListenerImpl;
+    using ListenerImplPtr = std::unique_ptr<ListenerImpl>;
 
     /**
      * Provides the draining filter chains and the functionality to schedule listener destroy.
@@ -148,8 +148,7 @@ namespace Server {
         //void inPlaceFilterChainUpdate(ListenerImpl& listener);
 
         // Server::ListenerManager
-/*        bool addOrUpdateListener(const envoy::config::listener::v3::Listener& config,
-                                 const std::string& version_info, bool added_via_api) override;*/
+        bool addOrUpdateListener(const std::string& version_info, bool added_via_api) override;
 /*        void createLdsApi(const envoy::config::core::v3::ConfigSource& lds_config,
                           const xds::core::v3::ResourceLocator* lds_resources_locator) override {
             ASSERT(lds_api_ == nullptr);
@@ -181,9 +180,8 @@ namespace Server {
          */
         using ListenerCompletionCallback = std::function<void()>;
 
-/*        bool addOrUpdateListenerInternal(const envoy::config::listener::v3::Listener& config,
-                                         const std::string& version_info, bool added_via_api,
-                                         const std::string& name);*/
+        bool addOrUpdateListenerInternal(const std::string& version_info, bool added_via_api,
+                                         const std::string& name);
        // bool removeListenerInternal(const std::string& listener_name, bool dynamic_listeners_only);
 
 /*        struct DrainingListener {

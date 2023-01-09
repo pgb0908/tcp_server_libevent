@@ -48,7 +48,7 @@ public:
 
     void initialize();
 
-    size_t concurrency() {return 2;};
+    size_t concurrency() {return 1;};
 
     void sayHello(){
         std::cout << " ------------------hello" << std::endl;
