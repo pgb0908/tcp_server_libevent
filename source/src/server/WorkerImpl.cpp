@@ -28,15 +28,14 @@ namespace Server {
                 [this](OverloadActionState state) { resetStreamsUsingExcessiveMemory(state); });*/
     }
 
-/*    void WorkerImpl::addListener(absl::optional<uint64_t> overridden_listener,
-                                 Network::ListenerConfig& listener, AddListenerCompletion completion,
-                                 Runtime::Loader& runtime) {
-        dispatcher_->post([this, overridden_listener, &listener, &runtime, completion]() -> void {
-            handler_->addListener(overridden_listener, listener, runtime);
-            hooks_.onWorkerListenerAdded();
+    void WorkerImpl::addListener(absl::optional<uint64_t> overridden_listener,
+                                 Network::ListenerConfig& listener, AddListenerCompletion completion) {
+        dispatcher_->post([this, overridden_listener, &listener, completion]() -> void {
+            handler_->addListener(overridden_listener, listener);
+            //hooks_.onWorkerListenerAdded();
             completion();
         });
-    }*/
+    }
 
     uint64_t WorkerImpl::numConnections() const {
         uint64_t ret = 0;

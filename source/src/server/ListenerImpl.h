@@ -9,6 +9,7 @@
 #include "absl/strings/string_view.h"
 
 #include "include/network/Listener.h"
+#include "include/server/ListenerManager.h"
 
 namespace Server {
 
@@ -37,7 +38,7 @@ namespace Server {
 
     class ListenerManagerImpl;
 
-/*    class ListenSocketFactoryImpl : public Network::ListenSocketFactory {
+    class ListenSocketFactoryImpl : public Network::ListenSocketFactory {
     public:
         ListenSocketFactoryImpl(ListenerComponentFactory& factory,
                                 Network::Address::InstanceConstSharedPtr address,
@@ -90,7 +91,7 @@ namespace Server {
         // TODO(mattklein123): If a listener does not bind, it still has a socket. This is confusing
         // and not needed and can be cleaned up.
         std::vector<Network::SocketSharedPtr> sockets_;
-    };*/
+    };
 
 // TODO(mattklein123): Consider getting rid of pre-worker start and post-worker start code by
 //                     initializing all listeners after workers are started.
@@ -283,15 +284,15 @@ namespace Server {
             return addresses_;
         }
         //const envoy::config::listener::v3::Listener& config() const { return config_; }
-/*        const std::vector<Network::ListenSocketFactoryPtr>& getSocketFactories() const {
+        const std::vector<Network::ListenSocketFactoryPtr>& getSocketFactories() const {
             return socket_factories_;
-        }*/
+        }
         //void debugLog(const std::string& message);
         void initialize();
 /*        DrainManager& localDrainManager() const {
             return listener_factory_context_->listener_factory_context_base_->drainManager();
         }*/
-        //void addSocketFactory(Network::ListenSocketFactoryPtr&& socket_factory);
+        void addSocketFactory(Network::ListenSocketFactoryPtr&& socket_factory);
         //void setSocketAndOptions(const Network::SocketSharedPtr& socket);
         //const Network::Socket::OptionsSharedPtr& listenSocketOptions() { return listen_socket_options_; }
         const std::string& versionInfo() const { return version_info_; }
@@ -301,11 +302,11 @@ namespace Server {
                                           Network::Socket::Type socket_type);*/
 
         // Compare whether two listeners have different socket options.
-        //bool socketOptionsEqual(const ListenerImpl& other) const;
+        bool socketOptionsEqual(const ListenerImpl& other) const;
         // Check whether a new listener can share sockets with this listener.
-        //bool hasCompatibleAddress(const ListenerImpl& other) const;
+        bool hasCompatibleAddress(const ListenerImpl& other) const;
         // Check whether a new listener has duplicated listening address this listener.
-        //bool hasDuplicatedAddress(const ListenerImpl& other) const;
+        bool hasDuplicatedAddress(const ListenerImpl& other) const;
 
         // Network::ListenerConfig
         //Network::FilterChainManager& filterChainManager() override { return *filter_chain_manager_; }
@@ -365,7 +366,7 @@ namespace Server {
         void cloneSocketFactoryFrom(const ListenerImpl& other);
         void closeAllSockets();
 
-        //Network::Socket::Type socketType() const { return socket_type_; }
+        Network::Socket::Type socketType() const { return socket_type_; }
 
         // Network::FilterChainFactory
 /*        bool createNetworkFilterChain(Network::Connection& connection,
@@ -440,7 +441,7 @@ namespace Server {
 
         ListenerManagerImpl& parent_;
         std::vector<Network::Address::InstanceConstSharedPtr> addresses_;
-        //const Network::Socket::Type socket_type_;
+        const Network::Socket::Type socket_type_;
 
         std::vector<Network::ListenSocketFactoryPtr> socket_factories_;
         const bool bind_to_port_;

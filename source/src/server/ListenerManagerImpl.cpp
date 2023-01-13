@@ -11,6 +11,8 @@
 
 #include "src/server/Server.h"
 #include "ListenerImpl.h"
+#include "absl/strings/str_join.h"
+#include "include/common/Exception.h"
 
 namespace Server {
     namespace {
@@ -373,7 +375,7 @@ namespace Server {
             }
         }*/
 
-        addOrUpdateListenerInternal(version_info, added_via_api, name);
+        return addOrUpdateListenerInternal(version_info, added_via_api, name);
 /*        auto it = error_state_tracker_.find(name);
         TRY_ASSERT_MAIN_THREAD {
                 return addOrUpdateListenerInternal(config, version_info, added_via_api, name);
@@ -393,10 +395,10 @@ namespace Server {
         return false;
     }
 
-/*    void ListenerManagerImpl::setupSocketFactoryForListener(ListenerImpl& new_listener,
+    void ListenerManagerImpl::setupSocketFactoryForListener(ListenerImpl& new_listener,
                                                             const ListenerImpl& existing_listener) {
         bool same_socket_options = true;
-*//*        if (Runtime::runtimeFeatureEnabled(ENABLE_UPDATE_LISTENER_SOCKET_OPTIONS_RUNTIME_FLAG)) {
+        if (Runtime::runtimeFeatureEnabled(ENABLE_UPDATE_LISTENER_SOCKET_OPTIONS_RUNTIME_FLAG)) {
             if (new_listener.reusePort() != existing_listener.reusePort()) {
                 throw EnvoyException(fmt::format("Listener {}: reuse port cannot be changed during an update",
                                                  new_listener.name()));
@@ -408,14 +410,14 @@ namespace Server {
                                                  "when the reuse port isn't enabled",
                                                  new_listener.name()));
             }
-        }*//*
+        }
 
-*//*        if (!(existing_listener.hasCompatibleAddress(new_listener) && same_socket_options)) {
+        if (!(existing_listener.hasCompatibleAddress(new_listener) && same_socket_options)) {
             setNewOrDrainingSocketFactory(new_listener.name(), new_listener);
         } else {
             new_listener.cloneSocketFactoryFrom(existing_listener);
-        }*//*
-    }*/
+        }
+    }
 
     bool ListenerManagerImpl::addOrUpdateListenerInternal(const std::string& version_info,bool added_via_api, const std::string& name) {
 
@@ -430,14 +432,14 @@ namespace Server {
         //const uint64_t hash = MessageUtil::hash(config);
         //ENVOY_LOG(debug, "begin add/update listener: name={} hash={}", name, hash);
 
-        //auto existing_active_listener = getListenerByName(active_listeners_, name);
-        //auto existing_warming_listener = getListenerByName(warming_listeners_, name);
+        auto existing_active_listener = getListenerByName(active_listeners_, name);
+        auto existing_warming_listener = getListenerByName(warming_listeners_, name);
 
         // The listener should be updated back to its original state and the warming listener should be
         // removed.
 /*        if (existing_warming_listener != warming_listeners_.end() &&
-            existing_active_listener != active_listeners_.end() &&
-            (*existing_active_listener)->blockUpdate(hash)) {
+            existing_active_listener != active_listeners_.end() && (*existing_active_listener)->blockUpdate(hash))
+        {
             warming_listeners_.erase(existing_warming_listener);
             return true;
         }*/
@@ -474,9 +476,9 @@ namespace Server {
         ListenerImpl& new_listener_ref = *new_listener;
 
         bool added = false;
-/*        if (existing_warming_listener != warming_listeners_.end()) {
+        if (existing_warming_listener != warming_listeners_.end()) {
             //ASSERT(workers_started_);
-            new_listener->debugLog("update warming listener");
+            //new_listener->debugLog("update warming listener");
             setupSocketFactoryForListener(*new_listener, **existing_warming_listener);
             // In this case we can just replace inline.
             *existing_warming_listener = std::move(new_listener);
@@ -485,10 +487,12 @@ namespace Server {
             // In this case we have no warming listener, so what we do depends on whether workers
             // have been started or not.
             if (workers_started_) {
-                new_listener->debugLog("add warming listener");
+                //new_listener->debugLog("add warming listener");
+                std::cout << "add warming listener" << std::endl;
                 warming_listeners_.emplace_back(std::move(new_listener));
             } else {
-                new_listener->debugLog("update active listener");
+                //new_listener->debugLog("update active listener");
+                std::cout << "add active listener" << std::endl;
                 *existing_active_listener = std::move(new_listener);
             }
         } else {
@@ -496,15 +500,17 @@ namespace Server {
             // whether workers have been started or not.
             setNewOrDrainingSocketFactory(name, *new_listener);
             if (workers_started_) {
-                new_listener->debugLog("add warming listener");
+                //new_listener->debugLog("add warming listener");
+                std::cout << "add warming listener" << std::endl;
                 warming_listeners_.emplace_back(std::move(new_listener));
             } else {
-                new_listener->debugLog("add active listener");
+                //new_listener->debugLog("add active listener");
+                std::cout << "add active listener" << std::endl;
                 active_listeners_.emplace_back(std::move(new_listener));
             }
 
             added = true;
-        }*/
+        }
 
         //updateWarmingActiveGauges();
 /*        if (added) {
@@ -517,7 +523,7 @@ namespace Server {
         return true;
     }
 
-/*    bool ListenerManagerImpl::hasListenerWithDuplicatedAddress(const ListenerList& list,
+    bool ListenerManagerImpl::hasListenerWithDuplicatedAddress(const ListenerList& list,
                                                                const ListenerImpl& listener) {
         for (const auto& existing_listener : list) {
             if (existing_listener->hasDuplicatedAddress(listener)) {
@@ -525,7 +531,7 @@ namespace Server {
             }
         }
         return false;
-    }*/
+    }
 
 /*    void ListenerManagerImpl::drainListener(ListenerImplPtr&& listener) {
         // First add the listener to the draining list.
@@ -572,19 +578,19 @@ namespace Server {
         //updateWarmingActiveGauges();
     }*/
 
-/*    ListenerManagerImpl::ListenerList::iterator
+    ListenerManagerImpl::ListenerList::iterator
     ListenerManagerImpl::getListenerByName(ListenerList& listeners, const std::string& name) {
         auto ret = listeners.end();
-*//*        for (auto it = listeners.begin(); it != listeners.end(); ++it) {
+        for (auto it = listeners.begin(); it != listeners.end(); ++it) {
             if ((*it)->name() == name) {
                 // There should only ever be a single listener per name in the list. We could return faster
                 // but take the opportunity to assert that fact.
                 //ASSERT(ret == listeners.end());
                 ret = it;
             }
-        }*//*
+        }
         return ret;
-    }*/
+    }
 
     /*
     std::vector<std::reference_wrapper<Network::ListenerConfig>>
@@ -630,7 +636,7 @@ namespace Server {
         }
     }*/
 
-/*    void ListenerManagerImpl::addListenerToWorker(Worker& worker,
+    void ListenerManagerImpl::addListenerToWorker(Worker& worker,
                                                   absl::optional<uint64_t> overridden_listener,
                                                   ListenerImpl& listener,
                                                   ListenerCompletionCallback completion_callback) {
@@ -638,7 +644,7 @@ namespace Server {
             //ENVOY_LOG(debug, "replacing existing listener {}", overridden_listener.value());
             std::cout << fmt::format("replacing existing listener {}", overridden_listener.value()) << std::endl;
         }
-*//*        worker.addListener(
+        worker.addListener(
                 overridden_listener, listener,
                 [this, completion_callback]() -> void {
                     // The add listener completion runs on the worker thread. Post back to the main thread to
@@ -651,8 +657,8 @@ namespace Server {
                     });
                 },
                 server_.runtime()
-                );*//*
-    }*/
+                );
+    }
 
 /*    void ListenerManagerImpl::onListenerWarmed(ListenerImpl& listener) {
         // The warmed listener should be added first so that the worker will accept new connections
@@ -826,7 +832,7 @@ namespace Server {
             workers_waiting_to_run.DecrementCount();
         };
 
-/*        // We can not use "Cleanup" to simplify this logic here, because it results in a issue if Envoy is
+        // We can not use "Cleanup" to simplify this logic here, because it results in a issue if Envoy is
         // killed before workers are actually started. Specifically the AdminRequestGetStatsAndKill test
         // case in main_common_test fails with ASAN error if we use "Cleanup" here.
         const auto listeners_pending_init =
@@ -837,11 +843,11 @@ namespace Server {
             auto& listener = *listener_it;
             listener_it++;
 
-*//*            if (!doFinalPreWorkerListenerInit(*listener)) {
+/*            if (!doFinalPreWorkerListenerInit(*listener)) {
                 //incListenerCreateFailureStat();
                 removeListenerInternal(listener->name(), false);
                 continue;
-            }
+            }*/
             for (const auto& worker : workers_) {
                 addListenerToWorker(*worker, absl::nullopt, *listener,
                                     [this, listeners_pending_init, callback]() {
@@ -850,8 +856,8 @@ namespace Server {
                                             callback();
                                         }
                                     });
-            }*//*
-        }*/
+            }
+        }
         for (const auto& worker : workers_) {
             //ENVOY_LOG(debug, "starting worker {}", i);
             worker->start(worker_started_running);
@@ -998,22 +1004,25 @@ namespace Server {
         return filter_chain_res;
     }*/
 
-/*    void ListenerManagerImpl::setNewOrDrainingSocketFactory(const std::string& name,
+    void ListenerManagerImpl::setNewOrDrainingSocketFactory(const std::string& name,
                                                             ListenerImpl& listener) {
         if (hasListenerWithDuplicatedAddress(warming_listeners_, listener) ||
             hasListenerWithDuplicatedAddress(active_listeners_, listener)) {
             const std::string message =
                     fmt::format("error adding listener: '{}' has duplicate address '{}' as existing listener",
                                 name, absl::StrJoin(listener.addresses(), ",", Network::AddressStrFormatter()));
-            ENVOY_LOG(warn, "{}", message);
-            throw EnvoyException(message);
+            //ENVOY_LOG(warn, "{}", message);
+            //throw EnvoyException(message);
         }
+
+
+        createListenSocketFactory(listener);
 
         // Search through draining listeners to see if there is a listener that has a socket factory for
         // the same address we are configured for. This is an edge case, but
         // may happen if a listener is removed and then added back with a same or different name and
         // intended to listen on the same address. This should work and not fail.
-        const ListenerImpl* draining_listener_ptr = nullptr;
+/*        const ListenerImpl* draining_listener_ptr = nullptr;
         auto existing_draining_listener =
                 std::find_if(draining_listeners_.cbegin(), draining_listeners_.cend(),
                              [&listener](const DrainingListener& draining_listener) {
@@ -1047,17 +1056,27 @@ namespace Server {
             listener.cloneSocketFactoryFrom(*draining_listener_ptr);
         } else {
             createListenSocketFactory(listener);
-        }
-    }*/
+        }*/
+    }
 
-/*    void ListenerManagerImpl::createListenSocketFactory(ListenerImpl& listener) {
-*//*        Network::Socket::Type socket_type = listener.socketType();
+    void ListenerManagerImpl::createListenSocketFactory(ListenerImpl& listener) {
+        Network::Socket::Type socket_type = listener.socketType();
         ListenerComponentFactory::BindType bind_type = ListenerComponentFactory::BindType::NoBind;
         if (listener.bindToPort()) {
             bind_type = listener.reusePort() ? ListenerComponentFactory::BindType::ReusePort
                                              : ListenerComponentFactory::BindType::NoReusePort;
         }
-        TRY_ASSERT_MAIN_THREAD {
+
+
+        Network::SocketCreationOptions creation_options;
+        creation_options.mptcp_enabled_ = listener.mptcpEnabled();
+        for (auto& address : listener.addresses()) {
+            listener.addSocketFactory(std::make_unique<ListenSocketFactoryImpl>(
+                    factory_, address, socket_type, listener.listenSocketOptions(), listener.name(),
+                    listener.tcpBacklogSize(), bind_type, creation_options, server_.options().concurrency()));
+        }
+
+/*        TRY_ASSERT_MAIN_THREAD {
                 Network::SocketCreationOptions creation_options;
                 creation_options.mptcp_enabled_ = listener.mptcpEnabled();
                 for (auto& address : listener.addresses()) {
@@ -1072,8 +1091,8 @@ namespace Server {
                       e.what());
             incListenerCreateFailureStat();
             throw e;
-        }*//*
-    }*/
+        }*/
+    }
 
 /*    void ListenerManagerImpl::maybeCloseSocketsForListener(ListenerImpl& listener) {
 *//*        if (!listener.udpListenerConfig().has_value() ||

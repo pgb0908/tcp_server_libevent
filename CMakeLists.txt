@@ -33,7 +33,7 @@ set(SOURCE
         source/src/common/common/Statusor.h
         source/src/common/common/SafeMemcpy.h
         source/src/common/api/ApiImpl.cpp
-        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h source/include/server/LifecycleNotifier.h source/src/common/common/Cleanup.h source/src/common/event/RealTimeSystem.cpp source/src/common/event/RealTimeSystem.h source/src/common/common/Utility.cpp source/src/common/common/Utility.h source/include/server/Worker.h source/include/server/ListenerManager.h source/src/server/WorkerImpl.cpp source/src/server/WorkerImpl.h source/src/server/ConnectionHanlderImpl.cpp source/src/server/ConnectionHanlderImpl.h source/include/network/ConnectionHandler.h source/include/network/ListenSocket.h source/src/server/ListenerManagerImpl.cpp source/src/server/ListenerManagerImpl.h source/src/server/ListenerImpl.cpp source/src/server/ListenerImpl.h source/src/common/common/ScopTracker.h source/src/common/common/ScopeTracedObjectStack.h)
+        source/src/common/common/RandomGeneratorImpl.cpp source/src/common/common/RandomGeneratorImpl.h source/src/common/common/posix/ThreadImpl.cpp source/src/common/common/posix/ThreadImpl.h source/include/server/LifecycleNotifier.h source/src/common/common/Cleanup.h source/src/common/event/RealTimeSystem.cpp source/src/common/event/RealTimeSystem.h source/src/common/common/Utility.cpp source/src/common/common/Utility.h source/include/server/Worker.h source/include/server/ListenerManager.h source/src/server/WorkerImpl.cpp source/src/server/WorkerImpl.h source/src/server/ConnectionHanlderImpl.cpp source/src/server/ConnectionHanlderImpl.h source/include/network/ConnectionHandler.h source/include/network/ListenSocket.h source/src/server/ListenerManagerImpl.cpp source/src/server/ListenerManagerImpl.h source/src/server/ListenerImpl.cpp source/src/server/ListenerImpl.h source/src/common/common/ScopTracker.h source/src/common/common/ScopeTracedObjectStack.h source/src/common/network/Utility.cpp source/src/common/network/Utility.h source/src/common/network/SocketOptionImpl.cpp source/src/common/network/SocketOptionImpl.h source/src/common/common/ScalarToByteVector.h source/src/common/buffer/BufferImpl.cpp source/src/common/buffer/BufferImpl.h source/src/common/singleton/constSingleton.h source/src/common/common/Hash.cpp source/src/common/common/Hash.h source/include/common/IntervalSet.h source/include/common/Exception.h source/src/common/common/Assert.cpp source/src/common/common/Assert.h)
 
 add_library(envoy ${SOURCE})
 
@@ -60,7 +60,9 @@ target_link_libraries(envoy
         absl::utility
         OpenSSL::SSL
         fmt
-        z)
+        z
+        hash
+        )
 
 add_subdirectory(example)
 

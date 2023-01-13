@@ -5,6 +5,8 @@
 #include "ListenerImpl.h"
 
 #include "fmt/format.h"
+#include "include/network/Connection.h"
+#include "ListenerManagerImpl.h"
 
 namespace Server {
 
@@ -276,7 +278,7 @@ namespace Server {
     ListenerImpl::ListenerImpl(const std::string& version_info, ListenerManagerImpl& parent,
                                const std::string& name, bool added_via_api, bool workers_started)
             : parent_(parent),
-              //socket_type_(config.has_internal_listener() ? Network::Socket::Type::Stream : Network::Utility::protobufAddressSocketType(config.address())),
+              socket_type_(Network::Socket::Type::Stream),
               bind_to_port_(true), mptcp_enabled_(false),
               //hand_off_restored_destination_connections_(PROTOBUF_GET_WRAPPED_OR_DEFAULT(config, use_original_dst, false)),
         /*      per_connection_buffer_limit_bytes_(
@@ -393,7 +395,7 @@ namespace Server {
                                const std::string& name, bool added_via_api, bool workers_started,
                                uint64_t hash)
             : parent_(parent), addresses_(origin.addresses_),
-              //socket_type_(origin.socket_type_),
+              socket_type_(origin.socket_type_),
               bind_to_port_(false),
               mptcp_enabled_(false),
               workers_started_(workers_started),
@@ -820,15 +822,50 @@ namespace Server {
         }
     }
 
+    bool ListenerImpl::hasDuplicatedAddress(const ListenerImpl& other) const {
+        // Skip the duplicate address check if this is the case of a listener update with new socket
+        // options.
+/*        if (Runtime::runtimeFeatureEnabled(ENABLE_UPDATE_LISTENER_SOCKET_OPTIONS_RUNTIME_FLAG) &&
+            (name_ == other.name_) && !ListenerMessageUtil::socketOptionsEqual(config_, other.config_)) {
+            return false;
+        }*/
 
-/*
-    AccessLog::AccessLogManager& PerListenerFactoryContextImpl::accessLogManager() {
+        if (socket_type_ != other.socket_type_) {
+            return false;
+        }
+        // For listeners that do not bind or listeners that do not bind to port 0 we must check to make
+        // sure we are not duplicating the address. This avoids ambiguity about which non-binding
+        // listener is used or even worse for the binding to port != 0 and reuse port case multiple
+        // different listeners receiving connections destined for the same port.
+        for (auto& other_addr : other.addresses()) {
+            if (other_addr->ip() == nullptr ||
+                (other_addr->ip() != nullptr && (other_addr->ip()->port() != 0 || !bindToPort()))) {
+                if (find_if(addresses_.begin(), addresses_.end(),
+                            [&other_addr](const Network::Address::InstanceConstSharedPtr& addr) {
+                                return *other_addr == *addr;
+                            }) != addresses_.end()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void ListenerImpl::addSocketFactory(Network::ListenSocketFactoryPtr&& socket_factory) {
+        //buildConnectionBalancer(*socket_factory->localAddress());
+        buildUdpListenerWorkerRouter(*socket_factory->localAddress(),
+                                     parent_.server_.options().concurrency());
+        socket_factories_.emplace_back(std::move(socket_factory));
+    }
+
+
+/*    AccessLog::AccessLogManager& PerListenerFactoryContextImpl::accessLogManager() {
         return listener_factory_context_base_->accessLogManager();
     }
     Upstream::ClusterManager& PerListenerFactoryContextImpl::clusterManager() {
         return listener_factory_context_base_->clusterManager();
-    }
-    Event::Dispatcher& PerListenerFactoryContextImpl::mainThreadDispatcher() {
+    }*/
+/*    Event::Dispatcher& PerListenerFactoryContextImpl::mainThreadDispatcher() {
         return listener_factory_context_base_->mainThreadDispatcher();
     }
     const Server::Options& PerListenerFactoryContextImpl::options() {
@@ -908,15 +945,15 @@ namespace Server {
     bool PerListenerFactoryContextImpl::isQuicListener() const {
         return listener_factory_context_base_->isQuicListener();
     }
-    Init::Manager& PerListenerFactoryContextImpl::initManager() { return listener_impl_.initManager(); }
+    Init::Manager& PerListenerFactoryContextImpl::initManager() { return listener_impl_.initManager(); }*/
 
-    bool ListenerImpl::createNetworkFilterChain(
+/*    bool ListenerImpl::createNetworkFilterChain(
             Network::Connection& connection,
             const std::vector<Network::FilterFactoryCb>& filter_factories) {
         return Configuration::FilterChainUtility::buildFilterChain(connection, filter_factories);
-    }
+    }*/
 
-    bool ListenerImpl::createListenerFilterChain(Network::ListenerFilterManager& manager) {
+/*    bool ListenerImpl::createListenerFilterChain(Network::ListenerFilterManager& manager) {
         if (Configuration::FilterChainUtility::buildFilterChain(manager, listener_filter_factories_)) {
             return true;
         } else {
@@ -925,32 +962,26 @@ namespace Server {
             missing_listener_config_stats_.extension_config_missing_.inc();
             return false;
         }
-    }
+    }*/
 
-    void ListenerImpl::createUdpListenerFilterChain(Network::UdpListenerFilterManager& manager,
+/*    void ListenerImpl::createUdpListenerFilterChain(Network::UdpListenerFilterManager& manager,
                                                     Network::UdpReadFilterCallbacks& callbacks) {
         Configuration::FilterChainUtility::buildUdpFilterChain(manager, callbacks,
                                                                udp_listener_filter_factories_);
-    }
+    }*/
 
-    void ListenerImpl::debugLog(const std::string& message) {
+/*    void ListenerImpl::debugLog(const std::string& message) {
         UNREFERENCED_PARAMETER(message);
         ENVOY_LOG(debug, "{}: name={}, hash={}, tag={}, address={}", message, name_, hash_, listener_tag_,
                   absl::StrJoin(addresses_, ",", Network::AddressStrFormatter()));
-    }
+    }*/
 
 
 
-    Init::Manager& ListenerImpl::initManager() { return *dynamic_init_manager_; }
+    //Init::Manager& ListenerImpl::initManager() { return *dynamic_init_manager_; }
 
-    void ListenerImpl::addSocketFactory(Network::ListenSocketFactoryPtr&& socket_factory) {
-        buildConnectionBalancer(*socket_factory->localAddress());
-        buildUdpListenerWorkerRouter(*socket_factory->localAddress(),
-                                     parent_.server_.options().concurrency());
-        socket_factories_.emplace_back(std::move(socket_factory));
-    }
 
-    bool ListenerImpl::supportUpdateFilterChain(const envoy::config::listener::v3::Listener& config,
+/*    bool ListenerImpl::supportUpdateFilterChain(const envoy::config::listener::v3::Listener& config,
                                                 bool worker_started) {
         // The in place update needs the active listener in worker thread. worker_started guarantees the
         // existence of that active listener.
@@ -979,19 +1010,19 @@ namespace Server {
         }
 
         return false;
-    }
+    }*/
 
-    ListenerImplPtr
+/*    ListenerImplPtr
     ListenerImpl::newListenerWithFilterChain(const envoy::config::listener::v3::Listener& config,
                                              bool workers_started, uint64_t hash) {
         // Use WrapUnique since the constructor is private.
         return absl::WrapUnique(new ListenerImpl(*this, config, version_info_, parent_, name_,
                                                  added_via_api_,
-                *//* new new workers started state *//* workers_started,
-                *//* use new hash *//* hash));
-    }
+                 new new workers started state  workers_started,
+                 use new hash  hash));
+    }*/
 
-    void ListenerImpl::diffFilterChain(const ListenerImpl& another_listener,
+/*    void ListenerImpl::diffFilterChain(const ListenerImpl& another_listener,
                                        std::function<void(Network::DrainableFilterChain&)> callback) {
         for (const auto& message_and_filter_chain : filter_chain_manager_->filterChainsByMessage()) {
             if (another_listener.filter_chain_manager_->filterChainsByMessage().find(
@@ -1010,9 +1041,9 @@ namespace Server {
                      *filter_chain_manager_->defaultFilterChainMessage()))) {
             callback(*filter_chain_manager_->defaultFilterChain());
         }
-    }
+    }*/
 
-    bool ListenerImpl::getReusePortOrDefault(Server::Instance& server,
+/*    bool ListenerImpl::getReusePortOrDefault(Server::Instance& server,
                                              const envoy::config::listener::v3::Listener& config,
                                              Network::Socket::Type socket_type) {
         bool initial_reuse_port_value = [&server, &config]() {
@@ -1052,10 +1083,13 @@ namespace Server {
 #endif
 
         return initial_reuse_port_value;
-    }
+    }*/
 
     bool ListenerImpl::socketOptionsEqual(const ListenerImpl& other) const {
-        return ListenerMessageUtil::socketOptionsEqual(config_, other.config_);
+
+        //return ListenerMessageUtil::socketOptionsEqual(config_, other.config_);
+
+        return false;
     }
 
     bool ListenerImpl::hasCompatibleAddress(const ListenerImpl& other) const {
@@ -1082,34 +1116,6 @@ namespace Server {
         return true;
     }
 
-    bool ListenerImpl::hasDuplicatedAddress(const ListenerImpl& other) const {
-        // Skip the duplicate address check if this is the case of a listener update with new socket
-        // options.
-        if (Runtime::runtimeFeatureEnabled(ENABLE_UPDATE_LISTENER_SOCKET_OPTIONS_RUNTIME_FLAG) &&
-            (name_ == other.name_) && !ListenerMessageUtil::socketOptionsEqual(config_, other.config_)) {
-            return false;
-        }
-
-        if (socket_type_ != other.socket_type_) {
-            return false;
-        }
-        // For listeners that do not bind or listeners that do not bind to port 0 we must check to make
-        // sure we are not duplicating the address. This avoids ambiguity about which non-binding
-        // listener is used or even worse for the binding to port != 0 and reuse port case multiple
-        // different listeners receiving connections destined for the same port.
-        for (auto& other_addr : other.addresses()) {
-            if (other_addr->ip() == nullptr ||
-                (other_addr->ip() != nullptr && (other_addr->ip()->port() != 0 || !bindToPort()))) {
-                if (find_if(addresses_.begin(), addresses_.end(),
-                            [&other_addr](const Network::Address::InstanceConstSharedPtr& addr) {
-                                return *other_addr == *addr;
-                            }) != addresses_.end()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     void ListenerImpl::cloneSocketFactoryFrom(const ListenerImpl& other) {
         for (auto& socket_factory : other.getSocketFactories()) {
@@ -1123,7 +1129,7 @@ namespace Server {
         }
     }
 
-    bool ListenerMessageUtil::socketOptionsEqual(const envoy::config::listener::v3::Listener& lhs,
+/*    bool ListenerMessageUtil::socketOptionsEqual(const envoy::config::listener::v3::Listener& lhs,
                                                  const envoy::config::listener::v3::Listener& rhs) {
         if ((PROTOBUF_GET_WRAPPED_OR_DEFAULT(lhs, transparent, false) !=
              PROTOBUF_GET_WRAPPED_OR_DEFAULT(rhs, transparent, false)) ||
@@ -1141,9 +1147,9 @@ namespace Server {
                               Protobuf::util::MessageDifferencer differencer;
                               return differencer.Compare(option, other_option);
                           });
-    }
+    }*/
 
-    bool ListenerMessageUtil::filterChainOnlyChange(const envoy::config::listener::v3::Listener& lhs,
+/*    bool ListenerMessageUtil::filterChainOnlyChange(const envoy::config::listener::v3::Listener& lhs,
                                                     const envoy::config::listener::v3::Listener& rhs) {
         Protobuf::util::MessageDifferencer differencer;
         differencer.set_message_field_comparison(Protobuf::util::MessageDifferencer::EQUIVALENT);

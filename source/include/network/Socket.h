@@ -174,6 +174,12 @@ namespace Network {
     using ConnectionInfoSetterSharedPtr = std::shared_ptr<ConnectionInfoSetter>;
     using ConnectionInfoProviderSharedPtr = std::shared_ptr<const ConnectionInfoProvider>;
 
+    enum class SocketState {
+        STATE_PREBIND,
+        STATE_BOUND,
+        STATE_LISTENING
+    };
+
 /**
  * Base class for Sockets
  */
@@ -297,7 +303,7 @@ namespace Network {
              *        set for some particular state of the socket.
              * @return true if succeeded, false otherwise.
              */
-           // virtual bool setOption(Socket& socket,envoy::config::core::v3::SocketOption::SocketState state) const = 0;
+           virtual bool setOption(Socket& socket, SocketState state) const = 0;
 
             /**
              * @param vector of bytes to which the option should append hash key data that will be used
@@ -323,7 +329,7 @@ namespace Network {
              * @param state The state at which we would apply the options.
              * @return What we would apply to the socket at the provided state. Empty if we'd apply nothing.
              */
-            //virtual absl::optional<Details> getOptionDetails(const Socket& socket, envoy::config::core::v3::SocketOption::SocketState state) const = 0;
+            virtual absl::optional<Details> getOptionDetails(const Socket& socket, SocketState state) const = 0;
 
             /**
              * Whether the socket implementation is supported. Real implementations should typically return

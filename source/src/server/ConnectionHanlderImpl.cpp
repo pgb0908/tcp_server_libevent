@@ -4,6 +4,7 @@
 
 #include "ConnectionHanlderImpl.h"
 #include "include/event/Dispatcher.h"
+#include "src/common/network/AddressImpl.h"
 
 
 namespace Server {
@@ -20,15 +21,14 @@ namespace Server {
         --num_handler_connections_;
     }
 
-    /*void ConnectionHandlerImpl::addListener(absl::optional<uint64_t> overridden_listener,
-                                            Network::ListenerConfig& config, Runtime::Loader& runtime) {
+    void ConnectionHandlerImpl::addListener(absl::optional<uint64_t> overridden_listener,
+                                            Network::ListenerConfig& config) {
         if (overridden_listener.has_value()) {
-            ActiveListenerDetailsOptRef listener_detail =
-                    findActiveListenerByTag(overridden_listener.value());
-            ASSERT(listener_detail.has_value());
+            ActiveListenerDetailsOptRef listener_detail = findActiveListenerByTag(overridden_listener.value());
+            //ASSERT(listener_detail.has_value());
             listener_detail->get().invokeListenerMethod(
                     [&config](Network::ConnectionHandler::ActiveListener& listener) {
-                        listener.updateListenerConfig(config);
+                        //listener.updateListenerConfig(config);
                     });
             return;
         }
@@ -37,11 +37,9 @@ namespace Server {
         if (config.internalListenerConfig().has_value()) {
             // Ensure the this ConnectionHandlerImpl link to the thread local registry. Ideally this step
             // should be done only once. However, an extra phase and interface is overkill.
-            Network::InternalListenerRegistry& internal_listener_registry =
-                    config.internalListenerConfig()->internalListenerRegistry();
-            Network::LocalInternalListenerRegistry* local_registry =
-                    internal_listener_registry.getLocalRegistry();
-            RELEASE_ASSERT(local_registry != nullptr, "Failed to get local internal listener registry.");
+            Network::InternalListenerRegistry& internal_listener_registry = config.internalListenerConfig()->internalListenerRegistry();
+            Network::LocalInternalListenerRegistry* local_registry = internal_listener_registry.getLocalRegistry();
+            //RELEASE_ASSERT(local_registry != nullptr, "Failed to get local internal listener registry.");
             local_registry->setInternalListenerManager(*this);
             if (overridden_listener.has_value()) {
                 if (auto iter = listener_map_by_tag_.find(overridden_listener.value());
@@ -52,16 +50,17 @@ namespace Server {
                             });
                     return;
                 }
-                IS_ENVOY_BUG("unexpected");
+                //IS_ENVOY_BUG("unexpected");
             }
             auto internal_listener =
                     local_registry->createActiveInternalListener(*this, config, dispatcher());
             // TODO(soulxu): support multiple internal addresses in listener in the future.
-            ASSERT(config.listenSocketFactories().size() == 1);
+            //ASSERT(config.listenSocketFactories().size() == 1);
             details->addActiveListener(config, config.listenSocketFactories()[0]->localAddress(),
                                        listener_reject_fraction_, disable_listeners_,
                                        std::move(internal_listener));
         } else if (config.listenSocketFactories()[0]->socketType() == Network::Socket::Type::Stream) {
+            // admin listener 여기를 탐, worker도
             for (auto& socket_factory : config.listenSocketFactories()) {
                 auto address = socket_factory->localAddress();
                 // worker_index_ doesn't have a value on the main thread for the admin server.
@@ -73,8 +72,8 @@ namespace Server {
                                 address, config.connectionBalancer(*address)));
             }
         } else {
-            ASSERT(config.udpListenerConfig().has_value(), "UDP listener factory is not initialized.");
-            ASSERT(worker_index_.has_value());
+            //ASSERT(config.udpListenerConfig().has_value(), "UDP listener factory is not initialized.");
+            //ASSERT(worker_index_.has_value());
             for (auto& socket_factory : config.listenSocketFactories()) {
                 auto address = socket_factory->localAddress();
                 details->addActiveListener(
@@ -85,7 +84,7 @@ namespace Server {
             }
         }
 
-        ASSERT(!listener_map_by_tag_.contains(config.listenerTag()));
+        //ASSERT(!listener_map_by_tag_.contains(config.listenerTag()));
 
         for (const auto& per_address_details : details->per_address_details_list_) {
             // This map only stores the new listener.
@@ -116,7 +115,7 @@ namespace Server {
                         auto v4_compatible_addr = address->ip()->ipv6()->v4CompatibleAddress();
                         // When `v6only` is false, the address with an invalid IPv4-mapped address is rejected
                         // early.
-                        ASSERT(v4_compatible_addr != nullptr);
+                        //ASSERT(v4_compatible_addr != nullptr);
                         tcp_listener_map_by_address_.insert_or_assign(v4_compatible_addr->asStringView(),
                                                                       per_address_details);
                     }
@@ -128,7 +127,7 @@ namespace Server {
             }
         }
         listener_map_by_tag_.emplace(config.listenerTag(), std::move(details));
-    }*/
+    }
 
     /*void ConnectionHandlerImpl::removeListeners(uint64_t listener_tag) {
         if (auto listener_iter = listener_map_by_tag_.find(listener_tag);

@@ -3,6 +3,7 @@ zlib/1.2.11
 openssl/1.1.1h
 mbedtls/3.2.1
 fmt/9.1.0
+xxhash/0.8.1
 
 [options]
 zlib:shared=True

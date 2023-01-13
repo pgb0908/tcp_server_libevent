@@ -44,8 +44,7 @@ namespace Network {
          * @param config listener configuration options.
          * @param runtime the runtime for the server.
          */
-/*        virtual void addListener(absl::optional<uint64_t> overridden_listener, ListenerConfig& config,
-                                 Runtime::Loader& runtime) = 0;*/
+        virtual void addListener(absl::optional<uint64_t> overridden_listener, ListenerConfig& config) = 0;
 
         /**
          * Remove listeners using the listener tag as a key. All connections owned by the removed

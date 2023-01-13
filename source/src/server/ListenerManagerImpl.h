@@ -174,7 +174,7 @@ namespace Server {
 
 
     private:
-        //using ListenerList = std::list<ListenerImplPtr>;
+        using ListenerList = std::list<ListenerImplPtr>;
         /**
          * Callback invoked when a listener initialization is completed on worker.
          */
@@ -193,12 +193,12 @@ namespace Server {
         };*/
 
         //bool doFinalPreWorkerListenerInit(ListenerImpl& listener);
-        //void addListenerToWorker(Worker& worker, absl::optional<uint64_t> overridden_listener, ListenerImpl& listener, ListenerCompletionCallback completion_callback);
+        void addListenerToWorker(Worker& worker, absl::optional<uint64_t> overridden_listener,
+                                 ListenerImpl& listener, ListenerCompletionCallback completion_callback);
 
         //ProtobufTypes::MessagePtr dumpListenerConfigs(const Matchers::StringMatcher& name_matcher);
         //static ListenerManagerStats generateStats(Stats::Scope& scope);
-/*        static bool hasListenerWithDuplicatedAddress(const ListenerList& list,
-                                                     const ListenerImpl& listener);*/
+        static bool hasListenerWithDuplicatedAddress(const ListenerList& list, const ListenerImpl& listener);
 /*        void updateWarmingActiveGauges() {
             // Using set() avoids a multiple modifiers problem during the multiple processes phase of hot
             // restart.
@@ -252,26 +252,30 @@ namespace Server {
          * @param listeners supplies the listener list to look in.
          * @param name supplies the name to search for.
          */
-        //ListenerList::iterator getListenerByName(ListenerList& listeners, const std::string& name);
+        ListenerList::iterator getListenerByName(ListenerList& listeners, const std::string& name);
 
-        //void setNewOrDrainingSocketFactory(const std::string& name, ListenerImpl& listener);
-        //void createListenSocketFactory(ListenerImpl& listener);
+        void setNewOrDrainingSocketFactory(const std::string& name, ListenerImpl& listener);
+        void createListenSocketFactory(ListenerImpl& listener);
 
         //void maybeCloseSocketsForListener(ListenerImpl& listener);
-        //void setupSocketFactoryForListener(ListenerImpl& new_listener,const ListenerImpl& existing_listener);
+        void setupSocketFactoryForListener(ListenerImpl& new_listener,const ListenerImpl& existing_listener);
 
         //ApiListenerPtr api_listener_;
+
         // Active listeners are listeners that are currently accepting new connections on the workers.
-        //ListenerList active_listeners_;
+        ListenerList active_listeners_;
+
         // Warming listeners are listeners that may need further initialization via the listener's init
         // manager. For example, RDS, or in the future KDS. Once a listener is done warming it will
         // be transitioned to active.
-        //ListenerList warming_listeners_;
+        ListenerList warming_listeners_;
+
         // Draining listeners are listeners that are in the process of being drained and removed. They
         // go through two phases where first the workers stop accepting new connections and existing
         // connections are drained. Then after that time period the listener is removed from all workers
         // and any remaining connections are closed.
         //std::list<DrainingListener> draining_listeners_;
+
         //std::list<DrainingFilterChainsManager> draining_filter_chains_manager_;
 
         std::vector<WorkerPtr> workers_;

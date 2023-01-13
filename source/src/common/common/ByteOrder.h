@@ -7,7 +7,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include "Platform.h"
+#include "include/common/Platform.h"
 
 // NOLINT(namespace-envoy)
 

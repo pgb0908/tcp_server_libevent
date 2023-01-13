@@ -54,8 +54,8 @@ namespace Server {
                    Api::Api& api, WorkerStatNames& stat_names);*/
 
         // Server::Worker
-  /*      void addListener(absl::optional<uint64_t> overridden_listener, Network::ListenerConfig& listener,
-                         AddListenerCompletion completion, Runtime::Loader& loader) override;*/
+        void addListener(absl::optional<uint64_t> overridden_listener, Network::ListenerConfig& listener,
+                         AddListenerCompletion completion) override;
 
         uint64_t numConnections() const override;
 

@@ -34,9 +34,8 @@ namespace Server {
          *                   the worker.
          * @param runtime, supplies the runtime for the server
          */
-/*        virtual void addListener(absl::optional<uint64_t> overridden_listener,
-                                 Network::ListenerConfig& listener, AddListenerCompletion completion,
-                                 Runtime::Loader& runtime) = 0;*/
+        virtual void addListener(absl::optional<uint64_t> overridden_listener,
+                                 Network::ListenerConfig& listener, AddListenerCompletion completion) = 0;
 
         /**
          * @return uint64_t the number of connections across all listeners that the worker owns.
